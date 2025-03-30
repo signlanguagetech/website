@@ -12,4 +12,4 @@ We welcome contributions to this repository.
 
 ## Contact
 
-For any questions or feedback, please contact me at [signlanguagetech@gmail.com](mailto:signlanguagetech@gmail.com).
+For any questions or feedback, please contact us at [signlanguagetech@gmail.com](mailto:signlanguagetech@gmail.com).
