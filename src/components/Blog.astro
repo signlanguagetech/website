@@ -18,7 +18,7 @@ const { blog } = Astro.props;
   </div>
   <div class='date-speaker-group'>
     <FormattedDate class:list={['date']} date={blog.data.pubDate} />
-    <span class='speaker'>{blog.data.speaker}</span>
+    {'speaker' in blog.data && <span class='speaker'>{blog.data.speaker}</span>}
   </div>
 </a>
   
