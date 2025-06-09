@@ -18,9 +18,7 @@ import SltStackImg from '../components/icons/SltStackImg.astro';
           expand your knowledge, and empowers the deaf 
           and hard of hearing community.
         </h2>
-        <a href='/blog'>
-          <button class='primary-button'>Explore more</button>
-        </a>
+        <span id="book-appointment"></span>
       </div>
       <div class='section-right'>
         <SltStackImg width='300px' />
@@ -41,6 +39,25 @@ import SltStackImg from '../components/icons/SltStackImg.astro';
     </section>
   </main>
 </Layout>
+
+<script>
+(function() {
+  let target = document.getElementById('book-appointment');
+  window.addEventListener('load', function() {
+    // Ensure the 'calendar' object is available before using it
+    if (window.calendar && window.calendar.schedulingButton) {
+      window.calendar.schedulingButton.load({
+        url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1Wi9E73FtLSD0ipDT-ja0lttilXRAgKmhPURV8__LWcrGmfFk9pW-EYU91kBo_M4DKZ7AlGgXa?gv=true',
+        color: '#0066ff',
+        label: 'Book an appointment',
+        target,
+      });
+    } else {
+      console.error('Google Calendar schedulingButton is not available.');
+    }
+  });
+})();
+</script>
 
 <style>
   .pictures {
