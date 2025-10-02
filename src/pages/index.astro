@@ -2,6 +2,7 @@
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import Layout from '../layouts/Layout.astro';
 import SltStackImg from '../components/icons/SltStackImg.astro';
+import BookAppointmentButton from '../components/BookAppointmentButton.astro';
 
 ---
 
@@ -10,15 +11,15 @@ import SltStackImg from '../components/icons/SltStackImg.astro';
     <section class='main-content__intro'>
       <div class='section-left'>
         <h1 class='title'>Empowering
-          Deaf Community through 
+          Deaf Community through
           Technology and Innovation
         </h1>
         <h2 class='sub-title mb-2'>
           Sign Language Tech helps upskill your skill,
-          expand your knowledge, and empowers the deaf 
+          expand your knowledge, and empowers the deaf
           and hard of hearing community.
         </h2>
-        <span id="book-appointment"></span>
+        <BookAppointmentButton />
       </div>
       <div class='section-right'>
         <SltStackImg width='300px' />
@@ -40,24 +41,7 @@ import SltStackImg from '../components/icons/SltStackImg.astro';
   </main>
 </Layout>
 
-<script>
-(function() {
-  let target = document.getElementById('book-appointment');
-  window.addEventListener('load', function() {
-    // Ensure the 'calendar' object is available before using it
-    if (window.calendar && window.calendar.schedulingButton) {
-      window.calendar.schedulingButton.load({
-        url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1Wi9E73FtLSD0ipDT-ja0lttilXRAgKmhPURV8__LWcrGmfFk9pW-EYU91kBo_M4DKZ7AlGgXa?gv=true',
-        color: '#0066ff',
-        label: 'Book an appointment',
-        target,
-      });
-    } else {
-      console.error('Google Calendar schedulingButton is not available.');
-    }
-  });
-})();
-</script>
+
 
 <style>
   .pictures {
@@ -131,7 +115,7 @@ import SltStackImg from '../components/icons/SltStackImg.astro';
       height: unset;
     }
   }
-  @media (prefers-color-scheme: dark) { 
+  @media (prefers-color-scheme: dark) {
     .sub-title {
       color: rgb(var(--white), 0.5)
     }
