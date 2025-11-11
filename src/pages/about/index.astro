@@ -1,359 +1,90 @@
 ---
 import { SITE_TITLE } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
-import engineers from '../../model/engineers.json';
-import ExternalLink from '../../components/ExternalLink.astro';
-import LinkedinIcon from '../../components/icons/LinkedinIcon.astro';
-import TwitterIcon from '../../components/icons/TwitterIcon.astro';
-import BookAppointmentButton from '../../components/BookAppointmentButton.astro';
 
-const title = SITE_TITLE + ' | About Us';
-const description = `Sign Language Tech is a software agency founded by two Deaf engineers, specializing in accessible cloud-native and web application development. We build bridges through technology, driven by empathy, quality, and community.`;
+const title = SITE_TITLE + ' | About Me';
+const description = `I am Milad as an experienced Software Engineer with over 9
+        years in web services, I've been working on countless projects, each
+        presenting its unique potentials and challenges. Every challenge
+        overcome has enriched my knowledge base and fine-tuned my expertise. My
+        journey thus far has fueled my desire to share my accumulated wealth of
+        knowledge, and that's why this Sign Language Tech was born into here.`;
 ---
 
 <Layout title={title} description={description}>
-  <main class="about-page">
-    <section class="about-hero">
-      <h1>Code with Purpose, Communication without Barriers</h1>
-      <div class="intro-text">
-        <p>
-          At the heart of digital innovation, where code meets human experience,
-          Sign Language Tech was born. We were founded by two Deaf software
-          engineers with a shared vision: to build a digital future that is not just
-          functional, but fundamentally accessible to everyone.
-        </p>
-        <p>
-          Our identity isn't just a feature; it's our greatest strength. As members
-          of the Deaf community, we live and breathe accessibility. We understand
-          firsthand the barriers that non-inclusive design can create, and more
-          importantly, we see the incredible opportunity that accessible technology
-          offers to connect people.
-        </p>
-        <p>
-          This unique perspective is embedded in every line of code we write, every
-          solution we architect, and every project we deliver. We don't add
-          accessibility as an afterthought; we build it from the core.
-        </p>
-      </div>
-    </section>
+  <main>
+    <h2>Bridging the gap: web development in sign language</h2>
 
-    <section class="about-section">
-      <h2>Our Mission</h2>
-      <p>
-        Our mission is simple: to create exceptional software solutions that
-        empower users. We specialize in cloud-native software services and web
-        application development, driven by an unwavering commitment to quality,
-        innovation, and universal digital accessibility.
+    <div class='profile'>
+      <img class='profile-photo' src='/slt-my-profile-light.webp' alt="Milad profile"/>
+      <p class='mb-2'>
+        Hey there! I am Milad as an experienced Software Engineer with over 9
+        years in web services, I've been working on countless projects, each
+        presenting its unique potentials and challenges. Every challenge
+        overcome has enriched my knowledge base and fine-tuned my expertise. My
+        journey thus far has fueled my desire to share my accumulated wealth of
+        knowledge, and that's why this Sign Language Tech was born into here.
       </p>
-    </section>
+    </div>
 
-    <section class="about-section">
-      <h2>Our Values</h2>
-      <ul class="values-list">
-        <li>
-          <strong>Empathy-Driven Innovation:</strong> We solve complex problems
-          with elegant tech solutions that put the end-user first.
-        </li>
-        <li>
-          <strong>Quality by Design:</strong> We believe that accessible software
-          is inherently better software—more robust, usable, and scalable.
-        </li>
-        <li>
-          <strong>Seamless Collaboration:</strong> We foster direct, frictionless
-          communication, ensuring our clients' vision is perfectly translated into
-          the final product.
-        </li>
-        <li>
-          <strong>Community:</strong> We are committed to giving back, creating
-          tools and opportunities that open doors within the tech world.
-        </li>
-      </ul>
-      <p class="tagline">At Sign Language Tech, we don't just build software. We build bridges.</p>
-    </section>
+    <h3>Why Sign Language Tech?</h3>
 
-    <section class="about-section">
-      <h2>Our Engineers</h2>
-      <div class="engineer-profiles">
-        {engineers.map((engineer) => (
-          <div class="engineer-card">
-            <img src={engineer.image} alt={engineer.alt} class="engineer-photo" />
-            <h3>{engineer.name}</h3>
-            <p>{engineer.description}</p>
-            <div class="social-links-engineer">
-              {engineer.social?.linkedin && (
-                <ExternalLink href={engineer.social.linkedin}>
-                  <LinkedinIcon height="24px" width="24px" />
-                </ExternalLink>
-              )}
-              {engineer.social?.twitter && (
-                <ExternalLink href={engineer.social.twitter}>
-                  <TwitterIcon height="24px" width="24px" />
-                </ExternalLink>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+    <p class='mb-2'>
+      Well, Here, you'll find extensive, professional, and comprehensive
+      discussions on web development, delivered in a captivating and
+      user-friendly manner with International/American Sign Language. Beyond
+      coding and software language, I want to bridge the communication gap and
+      make this intriguing world of web development accessible to the deaf
+      community. An important part of my mission is to bring on-board deaf
+      experts who will share their valuable insights accumulated from years of
+      experience in their respective fields. My hope is that their unique
+      perspectives and advice will present you with a more profound
+      understanding of the multiple approaches and objectives prevalent in our
+      field.
+    </p>
 
-    <section class="cta-section">
-      <BookAppointmentButton />
-    </section>
+    <h3>Interactive Learning Opportunities</h3>
+
+    <p class='mb-2'>
+      However, this is not only about tutorials and interviews. I also plan to
+      organize interactive events where experts can offer presentations and
+      productive workshops. This will not only provide an opportunity for you to
+      interact with experts but also offer the chance to learn from more
+      hands-on experiences. This platform is dedicated to supporting your career
+      growth, fostering community spirit, and providing relevant workshops to
+      hone your skills. Stay tuned and join us on this enlightening journey in
+      web development!
+    </p>
   </main>
 </Layout>
 
 <style>
-  .about-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-  }
-
-  .about-hero {
-    text-align: center;
-    margin-bottom: 80px;
-  }
-
-  .about-hero h1 {
-    font-size: 2.441em;
-    line-height: 1.3;
-    margin-bottom: 40px;
-    color: rgb(var(--black));
-  }
-
-  .intro-text {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .intro-text p {
-    font-size: 1.15em;
-    line-height: 1.8;
-    color: rgb(var(--gray-dark));
-    margin-bottom: 24px;
-  }
-
-  .about-section {
-    margin-bottom: 80px;
-  }
-
-  .about-section h2 {
-    font-size: 2em;
-    line-height: 1.3;
-    margin-bottom: 24px;
-    color: rgb(var(--black));
-  }
-
-  .about-section p {
-    font-size: 1.15em;
-    line-height: 1.8;
-    color: rgb(var(--gray-dark));
-    margin-bottom: 20px;
-  }
-
-  .values-list {
-    list-style: none;
-    padding: 0;
-    margin: 24px 0;
-  }
-
-  .values-list li {
-    font-size: 1.15em;
-    line-height: 1.8;
-    color: rgb(var(--gray-dark));
-    margin-bottom: 20px;
-    padding-left: 24px;
-    position: relative;
-  }
-
-  .values-list li::before {
-    content: "•";
-    color: var(--accent);
-    font-size: 1.5em;
-    position: absolute;
-    left: 0;
-    top: -2px;
-  }
-
-  .values-list strong {
-    color: rgb(var(--black));
-  }
-
-  .tagline {
-    font-size: 1.25em;
-    font-style: italic;
-    color: rgb(var(--gray));
-    margin-top: 40px;
-  }
-
-  .engineer-profiles {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-    margin-top: 40px;
-  }
-
-  .engineer-card {
-    background: rgb(var(--gray-light));
-    border-radius: 12px;
-    padding: 32px;
-    text-align: center;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-  }
-
-  .engineer-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border-color: var(--accent);
-  }
-
-  .engineer-photo {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto 20px;
-    border: 4px solid white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .engineer-card h3 {
-    font-size: 1.563em;
-    margin: 0 0 16px 0;
-    color: rgb(var(--black));
-  }
-
-  .engineer-card p {
-    font-size: 1em;
-    line-height: 1.6;
-    color: rgb(var(--gray-dark));
-    margin-bottom: 20px;
-  }
-
-  .social-links-engineer {
+  .profile {
     display: flex;
-    justify-content: center;
-    gap: 16px;
   }
 
-  .social-links-engineer a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: white;
-    transition: all 0.3s ease;
+  .profile p {
+    padding-left: 40px;
   }
 
-  .social-links-engineer a:hover {
-    background: var(--accent);
-    transform: scale(1.1);
+  .profile-photo {
+    height: 200px;
+    width: 200px;
+    padding: 1em;
   }
 
-  .cta-section {
-    text-align: center;
-    margin-top: 80px;
-    padding: 60px 20px;
-    background: linear-gradient(135deg, rgba(var(--accent), 0.05) 0%, rgba(var(--accent), 0.1) 100%);
-    border-radius: 12px;
-  }
-
-  /* Mobile responsive */
   @media (max-width: 720px) {
-    .about-page {
-      padding: 20px 16px;
+    .profile {
+      flex-direction: column;
     }
 
-    .about-hero {
-      margin-bottom: 60px;
+    .profile p {
+      padding-left: 0;
     }
 
-    .about-hero h1 {
-      font-size: 1.953em;
-    }
-
-    .intro-text p {
-      font-size: 1.05em;
-    }
-
-    .about-section {
-      margin-bottom: 60px;
-    }
-
-    .about-section h2 {
-      font-size: 1.563em;
-    }
-
-    .about-section p,
-    .values-list li {
-      font-size: 1.05em;
-    }
-
-    .engineer-profiles {
-      grid-template-columns: 1fr;
-      gap: 30px;
-    }
-
-    .engineer-card {
-      padding: 24px;
-    }
-
-    .engineer-photo {
-      width: 150px;
-      height: 150px;
-    }
-
-    .engineer-card h3 {
-      font-size: 1.25em;
-    }
-
-    .cta-section {
-      margin-top: 60px;
-      padding: 40px 16px;
-    }
-  }
-
-  /* Dark mode */
-  @media (prefers-color-scheme: dark) {
-    .about-hero h1,
-    .about-section h2,
-    .values-list strong,
-    .engineer-card h3 {
-      color: rgb(var(--white), 0.9);
-    }
-
-    .intro-text p,
-    .about-section p,
-    .values-list li,
-    .engineer-card p {
-      color: rgb(var(--gray));
-    }
-
-    .tagline {
-      color: rgb(var(--gray-light));
-    }
-
-    .engineer-card {
-      background: rgb(var(--gray-dark));
-    }
-
-    .engineer-photo {
-      border-color: rgb(var(--gray-dark));
-    }
-
-    .social-links-engineer a {
-      background: rgb(var(--gray-dark));
-    }
-
-    .social-links-engineer a:hover {
-      background: var(--accent);
-    }
-
-    .cta-section {
-      background: linear-gradient(135deg, rgba(var(--accent), 0.1) 0%, rgba(var(--accent), 0.15) 100%);
+    .profile-photo {
+      height: 100px;
+      width: 100px;
     }
   }
 </style>

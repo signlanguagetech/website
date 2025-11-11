@@ -1,7 +1,7 @@
 {
   "name": "signlanguagetech-website",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,17 +10,17 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/alpinejs": "^0.4.9",
-    "@astrojs/check": "^0.9.5",
-    "@astrojs/mdx": "^4.3.10",
-    "@astrojs/rss": "^4.0.13",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/alpinejs": "^0.4.8",
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.4.1",
     "@docsearch/css": "^3.9.0",
     "@docsearch/js": "^3.9.0",
     "@types/alpinejs": "^3.13.11",
-    "alpinejs": "^3.15.1",
-    "astro": "^5.15.5",
-    "sharp": "^0.34.5",
-    "typescript": "^5.9.3"
+    "alpinejs": "^3.14.9",
+    "astro": "^5.13.2",
+    "sharp": "^0.33.5",
+    "typescript": "^5.8.3"
   }
 }
