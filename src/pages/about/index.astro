@@ -78,10 +78,10 @@ const description = `Meet the team behind Sign Language Tech - experienced softw
   }
 
   .engineer-card {
-    border: 1px solid #e0e0e0;
+    border: 1px solid light-dark(#e0e0e0, #333);
     border-radius: 8px;
     padding: 1.5rem;
-    background: #fafafa;
+    background: light-dark(#fafafa, #1a1a1a);
   }
 
   .profile {
@@ -106,12 +106,13 @@ const description = `Meet the team behind Sign Language Tech - experienced softw
 
   .profile-info h3 {
     margin: 0 0 0.5rem 0;
-    color: #333;
+    color: light-dark(#333, #e0e0e0);
   }
 
   .profile-info p {
     margin: 0 0 1rem 0;
     line-height: 1.6;
+    color: light-dark(#555, #ccc);
   }
 
   .social-links {
@@ -132,7 +133,7 @@ const description = `Meet the team behind Sign Language Tech - experienced softw
   }
 
   .social-links a:hover {
-    background-color: rgba(0, 122, 204, 0.1);
+    background-color: light-dark(rgba(0, 122, 204, 0.1), rgba(0, 122, 204, 0.3));
   }
 
   @media (max-width: 720px) {
