@@ -12,9 +12,17 @@ permissions:
   pull-requests: write
 
 jobs:
-  preview:
+  check-original:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action != 'closed' && github.event.pull_request.head.repo.fork == false
+    outputs:
+      is_original: ${{ github.event.pull_request.head.repo.fork == false }}
+    steps:
+      - run: echo "Checking if PR is from original repo"
+
+  preview:
+    needs: check-original
+    runs-on: ubuntu-latest
+    if: needs.check-original.outputs.is_original == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action != 'closed'
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v4
@@ -88,8 +96,9 @@ jobs:
             has been successfully uploaded.`,
               });
   teardown:
+    needs: check-original
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action == 'closed' && github.event.pull_request.head.repo.fork == false
+    if: needs.check-original.outputs.is_original == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action == 'closed'
     steps:
       - name: Generate preview domain
         id: preview-domain
@@ -157,8 +166,9 @@ jobs:
             });
 
   delete-branch:
+    needs: check-original
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.merged == true && github.event.pull_request.head.repo.fork == false
+    if: needs.check-original.outputs.is_original == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.merged == true
     steps:
       - name: Delete branch
         id: delete-branch
