@@ -1,43 +1,54 @@
 ---
 import { SITE_TITLE } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
+import type { Engineer } from '../../model/model';
+import engineersData from '../../model/engineers.json';
+import LinkedinIcon from '../../components/icons/LinkedinIcon.astro';
+import TwitterIcon from '../../components/icons/TwitterIcon.astro';
 
-const title = SITE_TITLE + ' | About Me';
-const description = `I am Milad as an experienced Software Engineer with over 9
-        years in web services, I've been working on countless projects, each
-        presenting its unique potentials and challenges. Every challenge
-        overcome has enriched my knowledge base and fine-tuned my expertise. My
-        journey thus far has fueled my desire to share my accumulated wealth of
-        knowledge, and that's why this Sign Language Tech was born into here.`;
+const engineers: Engineer[] = engineersData;
+
+const title = SITE_TITLE + ' | About Us';
+const description = `Meet the team behind Sign Language Tech - experienced software engineers dedicated to making web development accessible through sign language.`;
 ---
 
 <Layout title={title} description={description}>
   <main>
     <h2>Bridging the gap: web development in sign language</h2>
 
-    <div class='profile'>
-      <img class='profile-photo' src='/slt-my-profile-light.webp' alt="Milad profile"/>
-      <p class='mb-2'>
-        Hey there! I am Milad as an experienced Software Engineer with over 9
-        years in web services, I've been working on countless projects, each
-        presenting its unique potentials and challenges. Every challenge
-        overcome has enriched my knowledge base and fine-tuned my expertise. My
-        journey thus far has fueled my desire to share my accumulated wealth of
-        knowledge, and that's why this Sign Language Tech was born into here.
-      </p>
+    <div class='engineers-grid'>
+      {engineers.map((engineer) => (
+        <div class='engineer-card'>
+          <div class='profile'>
+            <img class='profile-photo' src={engineer.image} alt={engineer.alt}/>
+            <div class='profile-info'>
+              <h3>{engineer.name}</h3>
+              <p class='mb-2'>{engineer.description}</p>
+              <div class='social-links'>
+                <a href={engineer.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                  <LinkedinIcon height="24px" width="24px" />
+                </a>
+                <a href={engineer.social.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter profile">
+                  <TwitterIcon height="24px" width="24px" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
 
     <h3>Why Sign Language Tech?</h3>
 
     <p class='mb-2'>
-      Well, Here, you'll find extensive, professional, and comprehensive
+      Here, you'll find extensive, professional, and comprehensive
       discussions on web development, delivered in a captivating and
       user-friendly manner with International/American Sign Language. Beyond
-      coding and software language, I want to bridge the communication gap and
+      coding and software language, we want to bridge the communication gap and
       make this intriguing world of web development accessible to the deaf
-      community. An important part of my mission is to bring on-board deaf
+      community. An important part of our mission is to bring on-board deaf
       experts who will share their valuable insights accumulated from years of
-      experience in their respective fields. My hope is that their unique
+      experience in their respective fields. Our hope is that their unique
       perspectives and advice will present you with a more profound
       understanding of the multiple approaches and objectives prevalent in our
       field.
@@ -46,7 +57,7 @@ const description = `I am Milad as an experienced Software Engineer with over 9
     <h3>Interactive Learning Opportunities</h3>
 
     <p class='mb-2'>
-      However, this is not only about tutorials and interviews. I also plan to
+      However, this is not only about tutorials and interviews. We also plan to
       organize interactive events where experts can offer presentations and
       productive workshops. This will not only provide an opportunity for you to
       interact with experts but also offer the chance to learn from more
@@ -59,32 +70,80 @@ const description = `I am Milad as an experienced Software Engineer with over 9
 </Layout>
 
 <style>
-  .profile {
-    display: flex;
+  .engineers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
   }
 
-  .profile p {
-    padding-left: 40px;
+  .engineer-card {
+    border: 1px solid light-dark(#e0e0e0, #333);
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: light-dark(#fafafa, #1a1a1a);
+  }
+
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
   }
 
   .profile-photo {
-    height: 200px;
-    width: 200px;
-    padding: 1em;
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .profile-info {
+    flex: 1;
+  }
+
+  .profile-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: light-dark(#333, #e0e0e0);
+  }
+
+  .profile-info p {
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+    color: light-dark(#555, #ccc);
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .social-links a {
+    color: #007acc;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+
+  .social-links a:hover {
+    background-color: light-dark(rgba(0, 122, 204, 0.1), rgba(0, 122, 204, 0.3));
   }
 
   @media (max-width: 720px) {
-    .profile {
-      flex-direction: column;
-    }
-
-    .profile p {
-      padding-left: 0;
+    .engineers-grid {
+      grid-template-columns: 1fr;
     }
 
     .profile-photo {
-      height: 100px;
-      width: 100px;
+      height: 120px;
+      width: 120px;
     }
   }
 </style>

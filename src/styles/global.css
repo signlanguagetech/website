@@ -11,6 +11,7 @@
 } */
 
 :root {
+  color-scheme: light dark;
   --accent: #2337ff;
   --accent-dark: #000d8a;
   --black: 15, 18, 25;
@@ -211,7 +212,6 @@ hr {
   color: rgb(var(--white));
   padding: 8px;
   border-radius: 5px;
-  border-color: rgb(var(--gray));
   cursor: pointer;
   border: 0px;
 }
@@ -235,7 +235,7 @@ hr {
   }
 }
 
-@media (prefers-color-scheme: dark) { 
+@media (prefers-color-scheme: dark) {
   body {
     background: linear-gradient(var(--black-gradient)) no-repeat;
     background-color: rgb(var(--black));
@@ -246,7 +246,7 @@ hr {
     background-color: rgb(var(--white));
     color: rgb(var(--black))
   }
-  
+
   a {
     color: rgba(var(--white), .5);
   }
@@ -276,7 +276,7 @@ hr {
   .primary-button:hover a {
     color: rgb(var(--black))
   }
-  
+
   code {
     background-color: rgba(var(--white), 0.1);
   }

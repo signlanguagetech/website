@@ -9,6 +9,18 @@ export interface Tag {
 
 export type ContentKeys = keyof DataEntryMap;
 
+export interface Engineer {
+  id: string;
+  name: string;
+  image: string;
+  alt: string;
+  description: string;
+  social: {
+    linkedin: string;
+    twitter: string;
+  };
+}
+
 // Calendar scheduling interfaces
 export interface CalendarSchedulingConfig {
   readonly url: string;
