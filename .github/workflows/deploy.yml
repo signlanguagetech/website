@@ -15,9 +15,17 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  check-original:
     runs-on: ubuntu-latest
-    if: github.repository == 'signlanguagetech/website'
+    outputs:
+      is_original: ${{ github.repository == 'signlanguagetech/website' }}
+    steps:
+      - run: echo "Checking if original repo"
+
+  build:
+    needs: check-original
+    runs-on: ubuntu-latest
+    if: needs.check-original.outputs.is_original == 'true'
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
@@ -35,7 +43,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.repository == 'signlanguagetech/website'
     environment:
       name: github-pages
       url: ${{ vars.GITHUB_PAGE_URL }}
