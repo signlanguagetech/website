@@ -13,7 +13,7 @@
   {
     "id": "ag",
     "name": "Andrés",
-    "image": "/slt-andres-profile-light.webp.png",
+    "image": "/slt-andres-profile-light.webp",
     "alt": "Andres profile",
     "description": "A Software Engineer from Colombia with over 7 years of experience. My journey in tech has been driven by a passion for building useful products and a deep curiosity for how things work, from mobile apps to AI. My main focus is Flutter, but I also have a strong background in full-stack development. As a Deaf professional, I'm also dedicated to making technology more accessible for everyone. This led me to contribute to the tech community as an open-source maintainer, a speaker at events like Google I/O Extended, and the Tech Lead for the 'Sign Language Tech' initiative.",
     "social": {
