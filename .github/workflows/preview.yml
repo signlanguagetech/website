@@ -14,7 +14,7 @@ permissions:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action != 'closed'
+    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action != 'closed' && github.event.pull_request.head.repo.fork == false
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v4
@@ -89,7 +89,7 @@ jobs:
               });
   teardown:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action == 'closed'
+    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action == 'closed' && github.event.pull_request.head.repo.fork == false
     steps:
       - name: Generate preview domain
         id: preview-domain
@@ -158,7 +158,7 @@ jobs:
 
   delete-branch:
     runs-on: ubuntu-latest
-    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.merged == true
+    if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.merged == true && github.event.pull_request.head.repo.fork == false
     steps:
       - name: Delete branch
         id: delete-branch
