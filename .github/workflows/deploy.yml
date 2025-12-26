@@ -15,6 +15,13 @@ permissions:
   id-token: write
 
 jobs:
+  check-original:
+    runs-on: ubuntu-latest
+    outputs:
+      is_original: ${{ github.repository == 'signlanguagetech/website' }}
+    steps:
+      - run: echo "Checking if original repo"
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -32,8 +39,9 @@ jobs:
           package-manager: pnpm@latest # The Node package manager that should be used to install dependencies and build your site. Automatically detected based on your lockfile. (optional)
 
   deploy:
-    needs: build
+    needs: [build, check-original]
     runs-on: ubuntu-latest
+    if: needs.check-original.outputs.is_original == 'true'
     environment:
       name: github-pages
       url: ${{ vars.GITHUB_PAGE_URL }}

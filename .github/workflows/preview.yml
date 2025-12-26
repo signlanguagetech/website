@@ -1,0 +1,229 @@
+name: PR Preview
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, closed]
+    # With pull_request_target, this runs in the context of the BASE repo
+    # and has access to secrets even for fork PRs.
+    # SECURITY: Be extremely careful with this trigger type!
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-original:
+    runs-on: ubuntu-latest
+    outputs:
+      is_original: ${{ github.event.pull_request.head.repo.fork == false }}
+    steps:
+      - run: echo "Checking if PR is from original repo"
+
+  preview:
+    needs: check-original
+    runs-on: ubuntu-latest
+    if: needs.check-original.outputs.is_original == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action != 'closed'
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          # IMPORTANT: For security with pull_request_target, you should:
+          # 1. Explicitly checkout the PR code
+          # 2. Perform security validation before using any code from the PR
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js with PNPM cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
+
+      - name: Cache .vite
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.vite
+          key: ${{ runner.os }}-vite-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('astro.config.mjs', 'tsconfig.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vite-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vite-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate preview domain
+        id: preview-domain
+        run: |
+          PR_NUMBER="${{ github.event.number }}"
+          REPO_NAME=$(echo "${{ github.repository }}" | sed 's/\//-/g')
+          PREVIEW_DOMAIN="${REPO_NAME}-preview-pr-${PR_NUMBER}.surge.sh"
+          echo "domain=${PREVIEW_DOMAIN}" >> $GITHUB_OUTPUT
+          echo "Preview domain: ${PREVIEW_DOMAIN}"
+
+      - name: Build site
+        env:
+          SITE_URL: "https://${{ steps.preview-domain.outputs.domain }}"
+        run: pnpm build
+
+      - name: Deploy to Surge for Preview
+        id: deploy-surge
+        run: |
+          export DEPLOY_DOMAIN=${{ steps.preview-domain.outputs.domain }}
+          pnpm dlx surge --project ./dist --domain $DEPLOY_DOMAIN --token ${{ secrets.SURGE_TOKEN }}
+
+      - name: Comment on PR success
+        if: steps.deploy-surge.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const domain = "${{ steps.preview-domain.outputs.domain }}";
+
+            await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: `## ✅ Preview deployment
+            [https://${domain}](https://${domain})
+            has been successfully uploaded.`,
+              });
+  teardown:
+    needs: check-original
+    runs-on: ubuntu-latest
+    if: needs.check-original.outputs.is_original == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action == 'closed'
+    steps:
+      - name: Generate preview domain
+        id: preview-domain
+        run: |
+          PR_NUMBER="${{ github.event.number }}"
+          REPO_NAME=$(echo "${{ github.repository }}" | sed 's/\//-/g')
+          PREVIEW_DOMAIN="${REPO_NAME}-preview-pr-${PR_NUMBER}.surge.sh"
+          echo "domain=${PREVIEW_DOMAIN}" >> $GITHUB_OUTPUT
+          echo "Preview domain: ${PREVIEW_DOMAIN}"
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Teardown Surge deployment
+        id: teardown
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          PREVIEW_DOMAIN: ${{ steps.preview-domain.outputs.domain }}
+        run: |
+          echo "Attempting to teardown ${PREVIEW_DOMAIN}"
+          pnpm dlx surge teardown ${PREVIEW_DOMAIN} --token ${SURGE_TOKEN}
+        continue-on-error: true
+
+      - name: List current deployments
+        id: list-deployments
+        if: steps.teardown.outcome == 'failure'
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+        run: pnpm dlx surge list --token ${SURGE_TOKEN}
+
+      - name: Comment on PR success
+        if: steps.teardown.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const domain = "${{ steps.preview-domain.outputs.domain }}";
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: `✅ Preview deployment \`${domain}\` has been successfully deleted.`
+            });
+
+      - name: Comment on PR failure
+        if: steps.teardown.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const domain = "${{ steps.preview-domain.outputs.domain }}";
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: `❌ Error removing preview deployment \`${domain}\`. Please check the logs for more details.`
+            });
+
+  delete-branch:
+    needs: check-original
+    runs-on: ubuntu-latest
+    if: needs.check-original.outputs.is_original == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.pull_request.merged == true
+    steps:
+      - name: Delete branch
+        id: delete-branch
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const branch = context.payload.pull_request.head.ref;
+
+            console.log(`Deleting branch ${branch} in ${owner}/${repo}`);
+
+            try {
+              await github.rest.git.deleteRef({
+                owner,
+                repo,
+                ref: `heads/${branch}`
+              });
+              console.log(`Branch ${branch} deleted successfully`);
+              return { success: true, branch: branch };
+            } catch (error) {
+              console.log(`Error deleting branch: ${error.message}`);
+              return { success: false, branch: branch, error: error.message };
+            }
+
+      - name: Comment on PR success
+        if: fromJSON(steps.delete-branch.outputs.result).success == true
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const result = JSON.parse('${{ steps.delete-branch.outputs.result }}');
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: `🗑️ Branch \`${result.branch}\` has been successfully deleted.`
+            });
+
+      - name: Comment on PR failure
+        if: fromJSON(steps.delete-branch.outputs.result).success == false
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const result = JSON.parse('${{ steps.delete-branch.outputs.result }}');
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number,
+              body: `❌ Error deleting branch \`${result.branch}\`: ${result.error}`
+            });
