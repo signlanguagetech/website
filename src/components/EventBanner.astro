@@ -261,61 +261,48 @@ const {
 </style>
 
 <script>
-  function formatEventDateTime() {
+  import { parseAndFormatEventDateTime } from '../helpers/dateTime.helper';
+
+  /** Extracts event data attributes from the banner element */
+  const getEventDataFromBanner = (banner: Element) => ({
+    startDateStr: banner.getAttribute('data-event-start'),
+    endDateStr: banner.getAttribute('data-event-end'),
+  });
+
+  /** Updates the DOM with formatted date/time values */
+  const updateEventDisplay = (date: string, time: string) => {
+    const dateDisplay = document.querySelector('.event-date-display');
+    const timeDisplay = document.querySelector('.event-time-display');
+
+    if (dateDisplay) dateDisplay.textContent = date;
+    if (timeDisplay) timeDisplay.textContent = time;
+  };
+
+  /** Main function to format and display event datetime */
+  const initEventBanner = () => {
     const banner = document.querySelector('.event-banner');
     if (!banner) return;
 
-    const startDateStr = banner.getAttribute('data-event-start');
-    const endDateStr = banner.getAttribute('data-event-end');
-    
+    const { startDateStr, endDateStr } = getEventDataFromBanner(banner);
     if (!startDateStr) return;
 
-    const startDate = new Date(startDateStr);
-    const endDate = endDateStr ? new Date(endDateStr) : null;
+    const { date, time } = parseAndFormatEventDateTime(startDateStr, endDateStr);
+    updateEventDisplay(date, time);
+  };
 
-    // Get user's timezone
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const shortTz = new Date().toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop();
+  /** Cleanup function to remove event listeners */
+  const cleanupEventBanner = () => {
+    document.removeEventListener('astro:page-load', initEventBanner);
+    document.removeEventListener('astro:before-swap', cleanupEventBanner);
+  };
 
-    // Format date: "January 21, 2025"
-    const dateOptions: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: userTimezone
-    };
-    const formattedDate = startDate.toLocaleDateString('en-US', dateOptions);
+  // Initialize on page load
+  initEventBanner();
 
-    // Format time: "6:00 PM - 9:00 PM EST"
-    const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-      timeZone: userTimezone
-    };
-    
-    let formattedTime = startDate.toLocaleTimeString('en-US', timeOptions);
-    
-    if (endDate) {
-      const endTime = endDate.toLocaleTimeString('en-US', timeOptions);
-      formattedTime = `${formattedTime} - ${endTime}`;
-    }
-    
-    formattedTime += ` ${shortTz}`;
+  // Re-initialize on Astro view transitions
+  document.addEventListener('astro:page-load', initEventBanner);
 
-    // Update the DOM
-    const dateDisplay = document.querySelector('.event-date-display');
-    const timeDisplay = document.querySelector('.event-time-display');
-    
-    if (dateDisplay) dateDisplay.textContent = formattedDate;
-    if (timeDisplay) timeDisplay.textContent = formattedTime;
-  }
-
-  // Run on page load
-  formatEventDateTime();
-
-  // Also run on view transitions (for Astro's View Transitions)
-  document.addEventListener('astro:page-load', formatEventDateTime);
+  // Cleanup before page swap (Astro view transitions)
+  document.addEventListener('astro:before-swap', cleanupEventBanner);
 </script>
 
