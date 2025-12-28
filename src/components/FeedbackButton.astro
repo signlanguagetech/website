@@ -1,0 +1,578 @@
+---
+interface Props {
+  position?: 'fixed' | 'inline';
+}
+
+const { position = 'fixed' } = Astro.props;
+---
+
+<div class:list={["feedback-wrapper", position === 'fixed' && "feedback-fixed"]}>
+  <button 
+    type="button" 
+    class="feedback-button"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-feedback-trigger
+  >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span class="feedback-label">Feedback</span>
+  </button>
+</div>
+
+<!-- Feedback Modal -->
+<div 
+  class="feedback-modal" 
+  role="dialog" 
+  aria-labelledby="feedback-title" 
+  aria-modal="true"
+  data-feedback-modal
+  hidden
+>
+  <div class="modal-backdrop" data-modal-close aria-hidden="true"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="feedback-title">Share Your Feedback</h2>
+      <button 
+        type="button" 
+        class="modal-close" 
+        data-modal-close
+        aria-label="Close feedback form"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <form class="feedback-form" data-feedback-form>
+      <p class="privacy-notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Your feedback helps us improve. We respect your privacy and won't share your information. 
+        <a href="/privacy-policy" target="_blank">Privacy Policy</a>
+      </p>
+
+      <div class="form-group">
+        <label for="feedback-type">Type of Feedback</label>
+        <select id="feedback-type" name="type" required>
+          <option value="">Select a category...</option>
+          <option value="accessibility">Accessibility Issue</option>
+          <option value="content">Content Suggestion</option>
+          <option value="bug">Bug Report</option>
+          <option value="feature">Feature Request</option>
+          <option value="praise">Something I Love</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="feedback-message">Your Message</label>
+        <textarea 
+          id="feedback-message" 
+          name="message" 
+          rows="5" 
+          required
+          placeholder="Tell us what's on your mind..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="feedback-email">Email (optional)</label>
+        <input 
+          type="email" 
+          id="feedback-email" 
+          name="email" 
+          placeholder="If you'd like us to follow up"
+        />
+      </div>
+
+      <div class="form-group consent-group">
+        <label class="consent-label">
+          <input type="checkbox" name="consent" required />
+          <span>I consent to submit this feedback</span>
+        </label>
+      </div>
+
+      <div class="form-status" role="status" aria-live="polite" data-form-status hidden></div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" data-modal-close>Cancel</button>
+        <button type="submit" class="btn-submit">
+          <span class="btn-text">Send Feedback</span>
+          <span class="btn-loading" hidden>
+            <svg class="spinner" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.416" stroke-dashoffset="10"></circle>
+            </svg>
+            Sending...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Fixed position button */
+  .feedback-fixed {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 1000;
+  }
+
+  .feedback-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--accent-teal, #0D9488);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(13, 148, 136, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .feedback-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(13, 148, 136, 0.5);
+  }
+
+  .feedback-button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .feedback-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Modal styles */
+  .feedback-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .feedback-modal[hidden] {
+    display: none;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    position: relative;
+    background: var(--bg-elevated, #fff);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    animation: modalIn 0.25s ease-out;
+  }
+
+  @keyframes modalIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-subtle, #E2E8F0);
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--fg-secondary, rgb(var(--gray)));
+    transition: background 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .modal-close:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .modal-close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Form styles */
+  .feedback-form {
+    padding: 1.5rem;
+  }
+
+  .privacy-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(20, 184, 166, 0.08);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: var(--fg-secondary, rgb(var(--gray)));
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  .privacy-notice svg {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-teal, #0D9488);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .privacy-notice a {
+    color: var(--accent-teal, #0D9488);
+    font-weight: 600;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--fg-primary, rgb(var(--black)));
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-subtle, #E2E8F0);
+    border-radius: 10px;
+    background: var(--bg-base, #F8FAFC);
+    color: var(--fg-primary, rgb(var(--black)));
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-teal, #14B8A6);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .consent-group {
+    margin-top: 1rem;
+  }
+
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .consent-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--accent-teal, #0D9488);
+  }
+
+  .form-status {
+    padding: 0.875rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-status.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .form-status.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #DC2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+  }
+
+  .btn-cancel {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid var(--border-subtle, #E2E8F0);
+    color: var(--fg-secondary, rgb(var(--gray)));
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .btn-cancel:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  .btn-submit {
+    padding: 0.75rem 1.5rem;
+    background: var(--accent-teal, #0D9488);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background: var(--accent-teal-light, #14B8A6);
+  }
+
+  .btn-submit:focus-visible,
+  .btn-cancel:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .modal-content {
+      background: var(--bg-elevated, #111827);
+    }
+
+    .modal-header {
+      border-color: var(--border-subtle, #1F2937);
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-subtle, #1F2937);
+      color: rgba(var(--white), 0.9);
+    }
+
+    .btn-cancel {
+      border-color: var(--border-subtle, #1F2937);
+      color: rgba(var(--white), 0.7);
+    }
+
+    .btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .feedback-label {
+      display: none;
+    }
+
+    .feedback-button {
+      padding: 0.875rem;
+      border-radius: 50%;
+    }
+
+    .feedback-fixed {
+      bottom: 1rem;
+      right: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feedback-button,
+    .modal-content {
+      transition: none;
+      animation: none;
+    }
+
+    .spinner {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const initFeedbackModal = () => {
+    const trigger = document.querySelector('[data-feedback-trigger]');
+    const modal = document.querySelector('[data-feedback-modal]');
+    const closeButtons = document.querySelectorAll('[data-modal-close]');
+    const form = document.querySelector('[data-feedback-form]') as HTMLFormElement;
+    const statusEl = document.querySelector('[data-form-status]');
+
+    if (!trigger || !modal) return;
+
+    let previousActiveElement: HTMLElement | null = null;
+
+    const openModal = () => {
+      previousActiveElement = document.activeElement as HTMLElement;
+      modal.removeAttribute('hidden');
+      trigger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+
+      // Focus first focusable element
+      const firstInput = modal.querySelector('select, input, textarea, button') as HTMLElement;
+      firstInput?.focus();
+
+      // Trap focus
+      modal.addEventListener('keydown', trapFocus);
+    };
+
+    const closeModal = () => {
+      modal.setAttribute('hidden', '');
+      trigger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      modal.removeEventListener('keydown', trapFocus);
+      previousActiveElement?.focus();
+    };
+
+    const trapFocus = (e: Event) => {
+      const keyEvent = e as KeyboardEvent;
+      if (keyEvent.key === 'Escape') {
+        closeModal();
+        return;
+      }
+
+      if (keyEvent.key !== 'Tab') return;
+
+      const focusableEls = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstEl = focusableEls[0] as HTMLElement;
+      const lastEl = focusableEls[focusableEls.length - 1] as HTMLElement;
+
+      if (keyEvent.shiftKey && document.activeElement === firstEl) {
+        e.preventDefault();
+        lastEl.focus();
+      } else if (!keyEvent.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        firstEl.focus();
+      }
+    };
+
+    trigger.addEventListener('click', openModal);
+    closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+
+    // Handle form submission (mock - replace with actual endpoint)
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitBtn = form.querySelector('.btn-submit') as HTMLButtonElement;
+      const btnText = submitBtn.querySelector('.btn-text') as HTMLElement;
+      const btnLoading = submitBtn.querySelector('.btn-loading') as HTMLElement;
+
+      // Show loading state
+      submitBtn.disabled = true;
+      btnText.hidden = true;
+      btnLoading.hidden = false;
+
+      try {
+        // Simulate API call - replace with actual endpoint
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        if (statusEl) {
+          statusEl.textContent = 'Thank you! Your feedback has been received.';
+          statusEl.className = 'form-status success';
+          statusEl.removeAttribute('hidden');
+        }
+
+        form.reset();
+        setTimeout(closeModal, 2000);
+      } catch {
+        if (statusEl) {
+          statusEl.textContent = 'Something went wrong. Please try again.';
+          statusEl.className = 'form-status error';
+          statusEl.removeAttribute('hidden');
+        }
+      } finally {
+        submitBtn.disabled = false;
+        btnText.hidden = false;
+        btnLoading.hidden = true;
+      }
+    });
+  };
+
+  initFeedbackModal();
+  document.addEventListener('astro:page-load', initFeedbackModal);
+</script>
+

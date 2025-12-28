@@ -14,17 +14,17 @@ interface Props {
 const { tags, blogs, currentTag, basePath } = Astro.props;
 ---
 
-<main class='main'>
+<div class='blog-main'>
   <div class='tag-chips'>
     <TagList basePath={basePath} tags={tags} currentTag={currentTag} />
   </div>
   <section class='videos-section'>
     <BlogList blogs={blogs} />
   </section>
-</main>
+</div>
 
 <style>
-  .main {
+  .blog-main {
     display: flex;
     flex-direction: column;
     gap: 20px;

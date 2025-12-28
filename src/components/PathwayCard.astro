@@ -1,0 +1,158 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  ctaText?: string;
+  icon: 'video' | 'book' | 'users';
+}
+
+const { title, description, href, ctaText = "Get Started", icon } = Astro.props;
+
+const icons = {
+  video: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+  </svg>`,
+  book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+  </svg>`,
+  users: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+    <circle cx="9" cy="7" r="4"></circle>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+  </svg>`,
+};
+---
+
+<article class="pathway-card">
+  <div class="pathway-icon" set:html={icons[icon]} />
+  <h3 class="pathway-title">{title}</h3>
+  <p class="pathway-description">{description}</p>
+  <a href={href} class="pathway-cta">
+    {ctaText}
+    <svg class="cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+      <polyline points="12 5 19 12 12 19"></polyline>
+    </svg>
+  </a>
+</article>
+
+<style>
+  .pathway-card {
+    background: var(--bg-elevated, #fff);
+    border: 1px solid var(--border-subtle, #E2E8F0);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pathway-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .pathway-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--accent-teal, #14B8A6) 0%, #0D9488 100%);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    color: #fff;
+  }
+
+  .pathway-icon :global(svg) {
+    width: 28px;
+    height: 28px;
+  }
+
+  .pathway-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    color: var(--fg-primary, rgb(var(--black)));
+  }
+
+  .pathway-description {
+    font-size: 0.95rem;
+    color: var(--fg-secondary, rgb(var(--gray)));
+    margin: 0 0 1.5rem;
+    line-height: 1.6;
+    flex-grow: 1;
+  }
+
+  .pathway-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: var(--accent-teal, #0D9488);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 2px solid var(--accent-teal, #0D9488);
+    border-radius: 10px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .pathway-cta:hover {
+    background: var(--accent-teal, #0D9488);
+    color: #fff;
+  }
+
+  .pathway-cta:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .cta-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+  }
+
+  .pathway-cta:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .pathway-card {
+      background: var(--bg-elevated, #111827);
+      border-color: var(--border-subtle, #1F2937);
+    }
+
+    .pathway-card:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .pathway-title {
+      color: rgba(var(--white), 0.9);
+    }
+
+    .pathway-description {
+      color: rgba(var(--white), 0.6);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pathway-card,
+    .pathway-cta,
+    .cta-arrow {
+      transition: none;
+    }
+
+    .pathway-card:hover {
+      transform: none;
+    }
+  }
+</style>
+

@@ -1,0 +1,120 @@
+---
+interface Props {
+  quote: string;
+  authorName: string;
+  authorRole: string;
+  authorOrg?: string;
+  avatarUrl?: string;
+  avatarAlt?: string;
+}
+
+const {
+  quote,
+  authorName,
+  authorRole,
+  authorOrg,
+  avatarUrl,
+  avatarAlt = `Photo of ${authorName}`,
+} = Astro.props;
+---
+
+<blockquote class="testimonial">
+  <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+  </svg>
+  <p class="testimonial-quote">{quote}</p>
+  <footer class="testimonial-author">
+    {avatarUrl && (
+      <img
+        src={avatarUrl}
+        alt={avatarAlt}
+        class="author-avatar"
+        loading="lazy"
+      />
+    )}
+    <div class="author-info">
+      <cite class="author-name">{authorName}</cite>
+      <span class="author-role">
+        {authorRole}{authorOrg && `, ${authorOrg}`}
+      </span>
+    </div>
+  </footer>
+</blockquote>
+
+<style>
+  .testimonial {
+    position: relative;
+    background: var(--bg-elevated, #fff);
+    border: 1px solid var(--border-subtle, #E2E8F0);
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 0;
+  }
+
+  .quote-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--accent-teal, #14B8A6);
+    opacity: 0.3;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-quote {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--fg-primary, rgb(var(--black)));
+    margin: 0 0 1.5rem;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-teal, #14B8A6);
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .author-name {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--fg-primary, rgb(var(--black)));
+  }
+
+  .author-role {
+    font-size: 0.85rem;
+    color: var(--fg-secondary, rgb(var(--gray)));
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .testimonial {
+      background: var(--bg-elevated, #111827);
+      border-color: var(--border-subtle, #1F2937);
+    }
+
+    .testimonial-quote {
+      color: rgba(var(--white), 0.85);
+    }
+
+    .author-name {
+      color: rgba(var(--white), 0.9);
+    }
+
+    .author-role {
+      color: rgba(var(--white), 0.6);
+    }
+  }
+</style>
+

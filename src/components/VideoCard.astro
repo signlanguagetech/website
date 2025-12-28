@@ -1,0 +1,277 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  thumbnailSrc: string;
+  thumbnailAlt: string;
+  href: string;
+  duration?: string;
+  hasCaptions: boolean;
+  transcriptHref?: string;
+}
+
+const {
+  title,
+  description,
+  thumbnailSrc,
+  thumbnailAlt,
+  href,
+  duration,
+  hasCaptions,
+  transcriptHref,
+} = Astro.props;
+---
+
+<article class="video-card">
+  <a href={href} class="video-thumbnail-link" aria-label={`Watch: ${title}`}>
+    <div class="video-thumbnail">
+      <img src={thumbnailSrc} alt={thumbnailAlt} loading="lazy" />
+      <div class="video-play-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+      </div>
+      {duration && <span class="video-duration">{duration}</span>}
+    </div>
+  </a>
+
+  <div class="video-meta">
+    <div class="video-badges">
+      {hasCaptions ? (
+        <span class="badge badge-captions" title="Captions available">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+            <path d="M7 15h4M13 15h4M7 11h2M11 11h2M15 11h2"></path>
+          </svg>
+          CC
+        </span>
+      ) : (
+        <span class="badge badge-no-captions" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          No Captions
+        </span>
+      )}
+    </div>
+
+    <h3 class="video-title">
+      <a href={href}>{title}</a>
+    </h3>
+
+    {description && <p class="video-description">{description}</p>}
+
+    {!hasCaptions && transcriptHref && (
+      <a href={transcriptHref} class="transcript-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        Read Transcript
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+  .video-card {
+    background: var(--bg-elevated, #fff);
+    border: 1px solid var(--border-subtle, #E2E8F0);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .video-thumbnail-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .video-thumbnail {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #1F2937;
+  }
+
+  .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border-radius: 0;
+  }
+
+  .video-card:hover .video-thumbnail img {
+    transform: scale(1.05);
+  }
+
+  .video-play-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .video-card:hover .video-play-icon {
+    opacity: 1;
+  }
+
+  .video-play-icon svg {
+    width: 48px;
+    height: 48px;
+    color: #fff;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  .video-duration {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .video-meta {
+    padding: 1rem 1.25rem 1.25rem;
+  }
+
+  .video-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+  }
+
+  .badge svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .badge-captions {
+    background: rgba(20, 184, 166, 0.15);
+    color: var(--accent-teal, #0D9488);
+    border: 1px solid rgba(20, 184, 166, 0.3);
+  }
+
+  .badge-no-captions {
+    background: rgba(245, 158, 11, 0.15);
+    color: #B45309;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .video-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    line-height: 1.3;
+  }
+
+  .video-title a {
+    color: var(--fg-primary, rgb(var(--black)));
+    text-decoration: none;
+  }
+
+  .video-title a:hover {
+    color: var(--accent-teal, #0D9488);
+  }
+
+  .video-description {
+    font-size: 0.9rem;
+    color: var(--fg-secondary, rgb(var(--gray)));
+    margin: 0 0 1rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .transcript-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-teal, #0D9488);
+    text-decoration: none;
+  }
+
+  .transcript-link:hover {
+    text-decoration: underline;
+  }
+
+  .transcript-link svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .video-card {
+      background: var(--bg-elevated, #111827);
+      border-color: var(--border-subtle, #1F2937);
+    }
+
+    .video-card:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .video-title a {
+      color: rgba(var(--white), 0.9);
+    }
+
+    .video-description {
+      color: rgba(var(--white), 0.6);
+    }
+
+    .badge-no-captions {
+      color: #FBBF24;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-card,
+    .video-thumbnail img,
+    .video-play-icon {
+      transition: none;
+    }
+
+    .video-card:hover {
+      transform: none;
+    }
+
+    .video-card:hover .video-thumbnail img {
+      transform: none;
+    }
+  }
+</style>
+

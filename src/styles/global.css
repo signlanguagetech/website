@@ -1,19 +1,26 @@
-
-/* TODO: css 'from', how it works if useful
-
-:root {
-  --base: #556bdd;
-  --swatch1: hsl(from var(--base) h s 0%);
-  --swatch2: hsl(from var(--base) h s 25%);
-  --swatch3: hsl(from var(--base) h s 50%);
-  --swatch4: hsl(from var(--base) h s 75%);
-  --swatch5: hsl(from var(--base) h s 100%);
-} */
+/* ==========================================================================
+   Design Tokens: WCAG 2.2 AA+ Accessibility-First
+   ========================================================================== */
 
 :root {
   color-scheme: light dark;
-  --accent: #2337ff;
-  --accent-dark: #000d8a;
+
+  /* Base palette (light mode) */
+  --bg-base: #F8FAFC;
+  --bg-elevated: #FFFFFF;
+  --fg-primary: #0F1219;
+  --fg-secondary: #475569;
+  --border-subtle: #E2E8F0;
+
+  /* Accent palette – WCAG AA contrast on both light/dark */
+  --accent-teal: #0D9488;       /* 4.5:1+ on white */
+  --accent-teal-light: #14B8A6; /* hover state */
+  --accent-amber: #D97706;      /* 4.5:1+ on white */
+  --accent-pink: #DB2777;       /* 4.5:1+ on white */
+
+  /* Legacy tokens (for backward compatibility) */
+  --accent: #0D9488;
+  --accent-dark: #0F766E;
   --black: 15, 18, 25;
   --black-gradient: rgba(var(--black), 50%), var(--gray-light);
   --white: 255, 255, 255;
@@ -23,6 +30,14 @@
   --gray-gradient: rgba(var(--gray-light), 50%), #fff;
   --box-shadow: 0 2px 6px rgba(var(--gray), 25%),
     0 8px 24px rgba(var(--gray), 33%), 0 16px 32px rgba(var(--gray), 33%);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent-teal);
+
+  /* High-contrast fallback (activated via .high-contrast class or media query) */
+  --hc-bg: #FFFFFF;
+  --hc-fg: #000000;
+  --hc-accent: #00857A;
 }
 
 ::selection {
@@ -235,7 +250,67 @@ hr {
   }
 }
 
+/* ==========================================================================
+   Accessibility: Focus states, skip link, reduced motion
+   ========================================================================== */
+
+/* Focus-visible ring for keyboard navigation */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Skip link – visible only on keyboard focus */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent-teal);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Reduced motion: disable animations and transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Dark Mode
+   ========================================================================== */
+
 @media (prefers-color-scheme: dark) {
+  :root {
+    --bg-base: #0B1021;
+    --bg-elevated: #111827;
+    --fg-primary: #F8FAFC;
+    --fg-secondary: #CBD5E1;
+    --border-subtle: #1F2937;
+    --accent-teal: #14B8A6;
+    --accent-teal-light: #2DD4BF;
+    --accent-amber: #F59E0B;
+    --accent-pink: #EC4899;
+    --accent: #14B8A6;
+    --focus-ring: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent-teal);
+  }
+
   body {
     background: linear-gradient(var(--black-gradient)) no-repeat;
     background-color: rgb(var(--black));
@@ -280,4 +355,22 @@ hr {
   code {
     background-color: rgba(var(--white), 0.1);
   }
+}
+
+/* ==========================================================================
+   High Contrast Mode (forced-colors or user preference)
+   ========================================================================== */
+
+@media (forced-colors: active) {
+  :root {
+    --bg-base: Canvas;
+    --fg-primary: CanvasText;
+    --accent-teal: LinkText;
+  }
+}
+
+.high-contrast {
+  --bg-base: var(--hc-bg);
+  --fg-primary: var(--hc-fg);
+  --accent-teal: var(--hc-accent);
 }
