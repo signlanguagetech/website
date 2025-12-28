@@ -14,7 +14,7 @@ interface Props {
 const { glossaries, link, currentSlug, currentGlossaryTitle } = Astro.props;
 ---
 
-<main class='main'>
+<div class='glossary-main'>
   <div class='aside-left'>
     <GlossaryTitleList
       glossaries={glossaries}
@@ -33,10 +33,10 @@ const { glossaries, link, currentSlug, currentGlossaryTitle } = Astro.props;
       )
     }
   </aside>
-</main>
+</div>
 
 <style>
-  .main {
+  .glossary-main {
     display: flex;
     gap: 40px;
   }
@@ -50,7 +50,7 @@ const { glossaries, link, currentSlug, currentGlossaryTitle } = Astro.props;
   }
 
   @media (max-width: 720px) {
-    .main {
+    .glossary-main {
       flex-direction: column;
     }
   }

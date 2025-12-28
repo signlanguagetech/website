@@ -1,0 +1,61 @@
+---
+interface Props {
+  message?: string;
+  ctaText?: string;
+  ctaHref?: string;
+}
+
+const {
+  message = "No upcoming events at the moment",
+  ctaText = "Watch Recorded Sessions",
+  ctaHref = "/blog",
+} = Astro.props;
+---
+
+<div class="empty-state" role="status" aria-live="polite">
+  <p class="empty-message">{message}</p>
+  <a href={ctaHref} class="empty-cta">
+    {ctaText} →
+  </a>
+</div>
+
+<style>
+  .empty-state {
+    text-align: center;
+    padding: var(--space-8) var(--space-4);
+    border: 1px dashed var(--border);
+  }
+
+  .empty-message {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+  }
+
+  .empty-cta {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    transition: opacity 0.2s ease;
+  }
+
+  .empty-cta:hover {
+    opacity: 0.7;
+  }
+
+  .empty-cta:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .empty-cta {
+      transition: none;
+    }
+  }
+</style>

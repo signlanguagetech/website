@@ -4,67 +4,151 @@ import SocialLinks from './SocialLinks.astro';
 const today = new Date();
 ---
 
-<footer>
+<footer role="contentinfo">
   <div class='container'>
-    <div class='info'>
-      <div>
+    <div class='footer-main'>
+      <div class='footer-brand'>
+        <span class='footer-title'>Sign Language Tech</span>
+        <p class='footer-tagline'>Bridging communication gaps in technology</p>
+      </div>
+      <nav class='footer-nav' aria-label="Footer navigation">
+        <a href='/blog'>Watch in Sign Language</a>
+        <a href='/glossary'>Learn Terms</a>
+        <a href='/about'>Meet the Team</a>
+      </nav>
+    </div>
+    <hr class='footer-divider' />
+    <div class='footer-bottom'>
+      <div class='footer-copyright'>
         &copy; {today.getFullYear()} Sign Language Tech. All rights reserved.
+      </div>
+      <div class='footer-links'>
+        <a href='/privacy-policy'>Privacy Policy</a>
+        <span class='footer-separator'>·</span>
+        <a href='mailto:signlanguagetech@gmail.com'>Contact</a>
+        <span class='footer-separator'>·</span>
+        <a href='#' class='feedback-trigger'>Feedback</a>
       </div>
       <div class='social-links'>
         <SocialLinks />
       </div>
     </div>
-    <div>
-      <ul>
-        <li><a href='/privacy-policy' target='_blank'>Privacy Policy</a></li>
-        <li><a href='mailto:signlanguagetech@gmail.com'>Contact Us</a></li>
-      </ul>
-    </div>
   </div>
 </footer>
+
 <style>
   footer {
-    padding: 2em 1em 6em 1em;
-    background: linear-gradient(var(--gray-gradient)) no-repeat;
-    color: rgb(var(--gray));
-    text-align: center;
-  }
-
-  ul {
-    padding-inline-start: 0;
-  }
-
-  ul li {
-    list-style-type: none;
+    padding: var(--space-12) var(--space-2) var(--space-8);
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
   }
 
   .container {
+    max-width: var(--content-wide);
+    margin: 0 auto;
+  }
+
+  .footer-main {
     display: flex;
     justify-content: space-between;
-    width: 960px;
-    max-width: calc(100% - 2em);
-    margin: auto;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
   }
+
+  .footer-brand {
+    max-width: 300px;
+  }
+
+  .footer-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .footer-tagline {
+    margin: var(--space-1) 0 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .footer-nav a {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .footer-nav a:hover {
+    text-decoration: underline;
+    opacity: 1;
+  }
+
+  .footer-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 0 var(--space-4);
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .footer-copyright {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 0.875rem;
+  }
+
+  .footer-links a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    text-decoration: underline;
+    opacity: 1;
+  }
+
+  .footer-separator {
+    color: var(--text-muted);
+  }
+
   .social-links {
     display: flex;
-    gap: 16px;
-    margin-top: 1em;
+    gap: var(--space-2);
   }
 
   @media (max-width: 720px) {
-    .info {
-      display: flex;
-    }
-    .container, .info {
+    .footer-main {
       flex-direction: column;
-      align-items: center;
+      gap: var(--space-4);
     }
-  }
 
-  @media (prefers-color-scheme: dark) {
-    footer {
-      background: rgb(var(--white), 0.03);
-      color: rgb(var(--white), 0.5);
+    .footer-nav {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-3);
     }
   }
 </style>

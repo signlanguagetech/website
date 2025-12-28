@@ -1,0 +1,95 @@
+---
+interface Props {
+  quote: string;
+  authorName: string;
+  authorRole: string;
+  authorOrg?: string;
+  avatarUrl?: string;
+  avatarAlt?: string;
+}
+
+const {
+  quote,
+  authorName,
+  authorRole,
+  authorOrg,
+  avatarUrl,
+  avatarAlt = `Photo of ${authorName}`,
+} = Astro.props;
+---
+
+<blockquote class="testimonial">
+  <p class="testimonial-quote">"{quote}"</p>
+  <footer class="testimonial-author">
+    {avatarUrl && (
+      <img
+        src={avatarUrl}
+        alt={avatarAlt}
+        class="author-avatar"
+        loading="lazy"
+      />
+    )}
+    <div class="author-info">
+      <cite class="author-name">{authorName}</cite>
+      <span class="author-role">
+        {authorRole}{authorOrg && `, ${authorOrg}`}
+      </span>
+    </div>
+  </footer>
+</blockquote>
+
+<style>
+  .testimonial {
+    position: relative;
+    border-left: 2px solid var(--text-primary);
+    padding: 0 0 0 var(--space-4);
+    margin: var(--space-6) 0;
+  }
+
+  .testimonial-quote {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-4);
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    border: 1px solid var(--border);
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .author-name {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+  }
+
+  .author-role {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .author-avatar {
+      transition: none;
+    }
+  }
+</style>

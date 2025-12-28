@@ -1,0 +1,309 @@
+---
+interface Props {
+  headline?: string;
+  subheadline?: string;
+  primaryCta?: { text: string; href: string };
+  secondaryCta?: { text: string; href: string };
+  videoSrc?: string;
+  videoPoster?: string;
+  hasCaptions?: boolean;
+}
+
+const {
+  headline = "Learn Web Development in Sign Language",
+  subheadline = "Bridging communication gaps. Empowering the next generation of Deaf tech leaders.",
+  primaryCta = { text: "Start Learning", href: "/blog" },
+  secondaryCta = { text: "Watch in Sign Language", href: "/blog" },
+  videoSrc,
+  videoPoster = "/conference.webp",
+  hasCaptions = false,
+} = Astro.props;
+
+const showCaptionWarning = videoSrc && !hasCaptions;
+const canPlayVideo = videoSrc && hasCaptions;
+---
+
+<section class="hero" aria-label="Welcome">
+  <div class="hero-background">
+    <img
+      class="hero-image"
+      src={videoPoster}
+      alt=""
+      aria-hidden="true"
+    />
+    <div class="hero-overlay" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero-content">
+    {showCaptionWarning && (
+      <div class="caption-warning" role="alert">
+        <span>Captions unavailable.</span>
+        <a href="/blog">View transcribed content instead →</a>
+      </div>
+    )}
+
+    <h1 class="hero-headline">{headline}</h1>
+    <p class="hero-subheadline">{subheadline}</p>
+
+    <div class="hero-ctas">
+      <a href={primaryCta.href} class="cta-primary">
+        {primaryCta.text} →
+      </a>
+      {canPlayVideo ? (
+        <button class="cta-secondary" id="play-video-btn" type="button">
+          {secondaryCta.text}
+        </button>
+      ) : (
+        <a href={secondaryCta.href} class="cta-secondary">
+          {secondaryCta.text}
+        </a>
+      )}
+    </div>
+  </div>
+
+  {canPlayVideo && (
+    <dialog class="video-modal" id="video-modal" aria-label="Video player">
+      <div class="video-modal-content">
+        <button class="video-close" id="close-video-btn" type="button" aria-label="Close video">
+          ✕
+        </button>
+        <video
+          class="hero-video"
+          controls
+          poster={videoPoster}
+        >
+          <source src={videoSrc} type="video/mp4" />
+          <track kind="captions" src="" label="Captions" default />
+        </video>
+      </div>
+    </dialog>
+  )}
+</section>
+
+<script>
+  const playBtn = document.getElementById('play-video-btn');
+  const closeBtn = document.getElementById('close-video-btn');
+  const modal = document.getElementById('video-modal') as HTMLDialogElement;
+  const video = modal?.querySelector('video');
+
+  playBtn?.addEventListener('click', () => {
+    modal?.showModal();
+    video?.play();
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    video?.pause();
+    modal?.close();
+  });
+
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      video?.pause();
+      modal?.close();
+    }
+  });
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: calc(-1 * var(--space-12)) calc(-50vw + 50%) 0;
+    padding: var(--space-16) var(--space-4);
+  }
+
+  .hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    text-align: center;
+    color: #FFFFFF;
+  }
+
+  .caption-warning {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: var(--space-1) var(--space-2);
+    margin-bottom: var(--space-4);
+    font-size: 0.875rem;
+    color: #FFFFFF;
+  }
+
+  .caption-warning a {
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0 0 var(--space-3);
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+  }
+
+  .hero-subheadline {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    line-height: 1.7;
+    margin: 0 0 var(--space-6);
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+  }
+
+  .cta-primary,
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .cta-primary {
+    background: #FFFFFF;
+    color: #000000;
+    border: 2px solid #FFFFFF;
+  }
+
+  .cta-primary:hover {
+    background: transparent;
+    color: #FFFFFF;
+  }
+
+  .cta-secondary {
+    background: transparent;
+    color: #FFFFFF;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .cta-secondary:hover {
+    border-color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .cta-primary:focus-visible,
+  .cta-secondary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #000000, 0 0 0 4px #FFFFFF;
+  }
+
+  /* Video Modal */
+  .video-modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    padding: var(--space-4);
+    background: rgba(0, 0, 0, 0.95);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-modal::backdrop {
+    background: rgba(0, 0, 0, 0.95);
+  }
+
+  .video-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .video-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: var(--space-1);
+  }
+
+  .video-close:hover {
+    opacity: 0.7;
+  }
+
+  .hero-video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000000;
+  }
+
+  @media (max-width: 720px) {
+    .hero {
+      min-height: 70vh;
+      padding: var(--space-12) var(--space-2);
+      margin: calc(-1 * var(--space-6)) -1rem 0;
+    }
+
+    .hero-ctas {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-primary,
+    .cta-secondary {
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta-primary,
+    .cta-secondary {
+      transition: none;
+    }
+  }
+</style>

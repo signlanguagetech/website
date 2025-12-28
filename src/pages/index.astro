@@ -1,133 +1,290 @@
 ---
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import Layout from '../layouts/Layout.astro';
-import SltStackImg from '../components/icons/SltStackImg.astro';
-import BookAppointmentButton from '../components/BookAppointmentButton.astro';
+import Hero from '../components/Hero.astro';
+import PathwayCard from '../components/PathwayCard.astro';
 import EventBanner from '../components/EventBanner.astro';
-
+import Testimonial from '../components/Testimonial.astro';
+import FeedbackButton from '../components/FeedbackButton.astro';
 ---
 
 <Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <main class='main-content'>
-    <EventBanner
-      eventTitle="TypeScript Spark with Sign Language Tech Team"
-      eventDateTime="2026-01-21T17:00:00Z"
-      eventEndDateTime="2026-01-21T18:00:00Z"
-      eventLocation="Online Event"
-      description="Join us for a tech meetup featuring Deaf developers, learn TypeScript, and grow together! 🚀"
-      lumaUrl="https://luma.com/cv6tue8x"
+  <div class="homepage">
+    <!-- Hero Section -->
+    <Hero
+      headline="Learn Web Development in Sign Language, Built for the Deaf Community"
+      subheadline="Bridging communication gaps. Empowering the next generation of Deaf tech leaders with tutorials, workshops, and interviews in American and International Sign Language."
+      primaryCta={{ text: "Start Learning", href: "/blog" }}
+      secondaryCta={{ text: "Watch in Sign Language", href: "/blog" }}
+      videoPoster="/conference.webp"
     />
-    
-    <section class='main-content__intro'>
-      <div class='section-left'>
-        <h1 class='title'>Empowering
-          Deaf Community through
-          Technology and Innovation
-        </h1>
-        <h2 class='sub-title mb-2'>
-          Sign Language Tech helps upskill your skill,
-          expand your knowledge, and empowers the deaf
-          and hard of hearing community.
-        </h2>
-        <BookAppointmentButton />
+
+    <!-- Featured Event -->
+    <section class="section section--event" aria-labelledby="event-heading">
+      <h2 id="event-heading" class="sr-only">Upcoming Event</h2>
+      <EventBanner
+        eventTitle="TypeScript Spark with Sign Language Tech Team"
+        eventDateTime="2026-01-21T17:00:00Z"
+        eventEndDateTime="2026-01-21T18:00:00Z"
+        eventLocation="Online Event"
+        description="Join us for a tech meetup featuring Deaf developers, learn TypeScript, and grow together!"
+        lumaUrl="https://luma.com/cv6tue8x"
+      />
+    </section>
+
+    <!-- Learning Pathways -->
+    <section class="section section--pathways" aria-labelledby="pathways-heading">
+      <div class="section-header">
+        <h2 id="pathways-heading" class="section-title">Start Your Journey</h2>
+        <p class="section-subtitle">Choose how you want to learn—all content delivered in sign language</p>
       </div>
-      <div class='section-right'>
-        <SltStackImg width='300px' />
+      <div class="pathways-grid">
+        <PathwayCard
+          title="Watch Videos"
+          description="Explore coding tutorials, conference talks, and tech insights delivered in sign language with full captions."
+          href="/blog"
+          icon="video"
+          ctaText="Browse Videos"
+        />
+        <PathwayCard
+          title="Learn Terms"
+          description="Build your technical vocabulary with our glossary of programming concepts explained with sign language demonstrations."
+          href="/glossary"
+          icon="book"
+          ctaText="Open Glossary"
+        />
+        <PathwayCard
+          title="Join Live Sessions"
+          description="Connect with Deaf developers in interactive workshops and meetups. Learn together, grow together."
+          href="https://luma.com/cv6tue8x"
+          icon="users"
+          ctaText="See Events"
+        />
       </div>
     </section>
-    <section class='main-content__features'>
-      <h1>Master coding with interactive tutorials, insightful interviews, and workshops delivered in International or American Sign Language</h1>
-      <div class='pictures'>
-        <img src='conference.webp' alt='conference'>
-        <img src='workshop.webp' alt='workshop'>
-        <img src='coding.webp' alt='coding'>
+
+    <!-- Social Proof / Images -->
+    <section class="section section--gallery" aria-labelledby="gallery-heading">
+      <h2 id="gallery-heading" class="section-title">Built by the Deaf Community, for the Deaf Community</h2>
+      <div class="gallery-grid">
+        <img src="/conference.webp" alt="Deaf engineers presenting at a tech conference with sign language interpretation" loading="lazy" />
+        <img src="/workshop.webp" alt="Hands-on coding workshop with participants learning together in sign language" loading="lazy" />
+        <img src="/coding.webp" alt="Developer pair programming and communicating in sign language" loading="lazy" />
       </div>
     </section>
-    <section class='main-content__explore-more'>
-      <a href='/blog'>
-        <button class='primary-button'>Explore more</button>
+
+    <!-- Testimonials -->
+    <section class="section section--testimonials" aria-labelledby="testimonials-heading">
+      <h2 id="testimonials-heading" class="section-title">What Our Community Says</h2>
+      <div class="testimonials-grid">
+        <Testimonial
+          quote="Sign Language Tech opened doors I didn't know existed. Learning to code in my native language made everything click."
+          authorName="Community Member"
+          authorRole="Software Developer"
+          avatarUrl="/slt-milad-profile-light.webp"
+          avatarAlt="Photo of a Deaf software developer"
+        />
+        <Testimonial
+          quote="Finally, tech content that respects how I communicate. The glossary is invaluable for understanding new concepts."
+          authorName="Community Member"
+          authorRole="Frontend Engineer"
+          avatarUrl="/slt-andres-profile-light.webp"
+          avatarAlt="Photo of a frontend engineer"
+        />
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section section--cta" aria-labelledby="cta-heading">
+      <h2 id="cta-heading" class="cta-title">Ready to Start Learning?</h2>
+      <p class="cta-subtitle">Join thousands of Deaf developers building their skills</p>
+      <a href="/blog" class="cta-button">
+        Explore Content
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
       </a>
     </section>
-  </main>
+
+    <!-- Persistent Feedback Button -->
+    <FeedbackButton position="fixed" />
+  </div>
 </Layout>
 
-
-
 <style>
-  .pictures {
-    display: flex;
-    height: 200px;
-    gap: 20px;
+  .homepage {
+    width: 100%;
   }
 
-  .pictures img {
-    border: 5px solid rgb(var(--black));
-    filter: grayscale(100%) brightness(130%);
+  /* Sections */
+  .section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 4rem 1rem;
   }
 
-  .pictures img:hover {
-    filter: grayscale(0);
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
   }
 
-  section {
-    margin-bottom: 120px;
-  }
-
-  .primary-button {
-    width: unset;
-    padding: 15px;
-  }
-  .primary-button {
-    font-size: 1em;
-  }
-  .main-content__intro {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .main-content__partners {
-    padding: 100px;
-    border: 1px black solid;
-  }
-
-  .main-content__features h1 {
-    font-size: 1.5em;
-    margin-bottom: 40px;
-  }
-
-  .main-content__explore-more {
-    padding: 100px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .title {
-    white-space: pre-line;
-    font-size: 2.5em;
+  .section-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
     font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
+    margin: 0 0 0.75rem;
+    color: var(--fg-primary, rgb(var(--black)));
   }
 
-  .sub-title {
-    white-space: pre-line;
-    font-size: 1em;
-    color: rgb(var(--gray))
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--fg-secondary, rgb(var(--gray)));
+    margin: 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  @media  (max-width: 720px) {
-    .section-right {
-      display: none;
+  /* Event section */
+  .section--event {
+    padding-top: 2rem;
+  }
+
+  /* Pathways grid */
+  .pathways-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Gallery */
+  .section--gallery {
+    text-align: center;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .gallery-grid img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 3px solid var(--border-subtle, #E2E8F0);
+    filter: grayscale(80%);
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+
+  .gallery-grid img:hover {
+    filter: grayscale(0);
+    transform: scale(1.02);
+  }
+
+  /* Testimonials */
+  .section--testimonials {
+    text-align: center;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  /* CTA Section */
+  .section--cta {
+    text-align: center;
+    padding: 5rem 1rem;
+  }
+
+  .cta-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 800;
+    margin: 0 0 0.75rem;
+  }
+
+  .cta-subtitle {
+    font-size: 1.15rem;
+    color: var(--fg-secondary, rgb(var(--gray)));
+    margin: 0 0 2rem;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: var(--accent-teal, #0D9488);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: background 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 20px rgba(13, 148, 136, 0.3);
+  }
+
+  .cta-button:hover {
+    background: var(--accent-teal-light, #14B8A6);
+    transform: translateY(-2px);
+    color: #fff;
+  }
+
+  .cta-button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .cta-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Responsive */
+  @media (max-width: 720px) {
+    .section {
+      padding: 3rem 1rem;
     }
 
-    .pictures {
-      flex-direction: column;
-      height: unset;
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery-grid img {
+      aspect-ratio: 16 / 9;
     }
   }
+
+  /* Dark mode */
   @media (prefers-color-scheme: dark) {
-    .sub-title {
-      color: rgb(var(--white), 0.5)
+    .section-title,
+    .cta-title {
+      color: rgba(var(--white), 0.9);
+    }
+
+    .section-subtitle,
+    .cta-subtitle {
+      color: rgba(var(--white), 0.6);
+    }
+
+    .gallery-grid img {
+      border-color: var(--border-subtle, #1F2937);
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-grid img,
+    .cta-button {
+      transition: none;
+    }
+
+    .gallery-grid img:hover {
+      transform: none;
     }
   }
 </style>

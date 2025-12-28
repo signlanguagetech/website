@@ -1,0 +1,483 @@
+---
+interface Props {
+  position?: 'fixed' | 'inline';
+}
+
+const { position = 'fixed' } = Astro.props;
+---
+
+<div class:list={["feedback-wrapper", position === 'fixed' && "feedback-fixed"]}>
+  <button 
+    type="button" 
+    class="feedback-button"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    data-feedback-trigger
+  >
+    <span class="feedback-label">Feedback</span>
+  </button>
+</div>
+
+<!-- Feedback Modal -->
+<div 
+  class="feedback-modal" 
+  role="dialog" 
+  aria-labelledby="feedback-title" 
+  aria-modal="true"
+  data-feedback-modal
+  hidden
+>
+  <div class="modal-backdrop" data-modal-close aria-hidden="true"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="feedback-title">Share Your Feedback</h2>
+      <button 
+        type="button" 
+        class="modal-close" 
+        data-modal-close
+        aria-label="Close feedback form"
+      >
+        ✕
+      </button>
+    </div>
+
+    <form class="feedback-form" data-feedback-form>
+      <p class="privacy-notice">
+        Your feedback helps us improve. We respect your privacy and won't share your information. 
+        <a href="/privacy-policy" target="_blank">Privacy Policy</a>
+      </p>
+
+      <div class="form-group">
+        <label for="feedback-type">Type of Feedback</label>
+        <select id="feedback-type" name="type" required>
+          <option value="">Select a category...</option>
+          <option value="accessibility">Accessibility Issue</option>
+          <option value="content">Content Suggestion</option>
+          <option value="bug">Bug Report</option>
+          <option value="feature">Feature Request</option>
+          <option value="praise">Something I Love</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="feedback-message">Your Message</label>
+        <textarea 
+          id="feedback-message" 
+          name="message" 
+          rows="5" 
+          required
+          placeholder="Tell us what's on your mind..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="feedback-email">Email (optional)</label>
+        <input 
+          type="email" 
+          id="feedback-email" 
+          name="email" 
+          placeholder="If you'd like us to follow up"
+        />
+      </div>
+
+      <div class="form-group consent-group">
+        <label class="consent-label">
+          <input type="checkbox" name="consent" required />
+          <span>I consent to submit this feedback</span>
+        </label>
+      </div>
+
+      <div class="form-status" role="status" aria-live="polite" data-form-status hidden></div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" data-modal-close>Cancel</button>
+        <button type="submit" class="btn-submit">
+          <span class="btn-text">Send Feedback</span>
+          <span class="btn-loading" hidden>Sending...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Fixed position button */
+  .feedback-fixed {
+    position: fixed;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    z-index: 1000;
+  }
+
+  .feedback-button {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    background: var(--text-primary);
+    color: var(--bg-base);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 2px solid var(--text-primary);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .feedback-button:hover {
+    background: transparent;
+    color: var(--text-primary);
+  }
+
+  .feedback-button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Modal styles */
+  .feedback-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2);
+  }
+
+  .feedback-modal[hidden] {
+    display: none;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .modal-content {
+    position: relative;
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.25s ease-out;
+  }
+
+  @keyframes modalIn {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: background 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: var(--bg-surface);
+  }
+
+  .modal-close:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Form styles */
+  .feedback-form {
+    padding: var(--space-4);
+  }
+
+  .privacy-notice {
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-4);
+    line-height: 1.6;
+  }
+
+  .privacy-notice a {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .form-group {
+    margin-bottom: var(--space-3);
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-1);
+    color: var(--text-primary);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: var(--space-2);
+    font-family: inherit;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    background: var(--bg-base);
+    color: var(--text-primary);
+    box-sizing: border-box;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 1px var(--text-primary);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .consent-group {
+    margin-top: var(--space-2);
+  }
+
+  .consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .consent-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--text-primary);
+  }
+
+  .form-status {
+    padding: var(--space-2);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .form-status.success {
+    background: var(--bg-surface);
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
+  }
+
+  .form-status.error {
+    background: var(--bg-surface);
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    padding-top: var(--space-2);
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    padding: var(--space-2) var(--space-3);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .btn-cancel:hover {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+  }
+
+  .btn-submit {
+    background: var(--text-primary);
+    color: var(--bg-base);
+    border: 2px solid var(--text-primary);
+  }
+
+  .btn-submit:hover {
+    background: transparent;
+    color: var(--text-primary);
+  }
+
+  .btn-submit:focus-visible,
+  .btn-cancel:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 720px) {
+    .feedback-fixed {
+      bottom: var(--space-2);
+      right: var(--space-2);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feedback-button,
+    .modal-content,
+    .btn-cancel,
+    .btn-submit {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const initFeedbackModal = () => {
+    const trigger = document.querySelector('[data-feedback-trigger]');
+    const modal = document.querySelector('[data-feedback-modal]');
+    const closeButtons = document.querySelectorAll('[data-modal-close]');
+    const form = document.querySelector('[data-feedback-form]') as HTMLFormElement;
+    const statusEl = document.querySelector('[data-form-status]');
+
+    if (!trigger || !modal) return;
+
+    let previousActiveElement: HTMLElement | null = null;
+
+    const openModal = () => {
+      previousActiveElement = document.activeElement as HTMLElement;
+      modal.removeAttribute('hidden');
+      trigger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+
+      // Focus first focusable element
+      const firstInput = modal.querySelector('select, input, textarea, button') as HTMLElement;
+      firstInput?.focus();
+
+      // Trap focus
+      modal.addEventListener('keydown', trapFocus);
+    };
+
+    const closeModal = () => {
+      modal.setAttribute('hidden', '');
+      trigger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      modal.removeEventListener('keydown', trapFocus);
+      previousActiveElement?.focus();
+    };
+
+    const trapFocus = (e: Event) => {
+      const keyEvent = e as KeyboardEvent;
+      if (keyEvent.key === 'Escape') {
+        closeModal();
+        return;
+      }
+
+      if (keyEvent.key !== 'Tab') return;
+
+      const focusableEls = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstEl = focusableEls[0] as HTMLElement;
+      const lastEl = focusableEls[focusableEls.length - 1] as HTMLElement;
+
+      if (keyEvent.shiftKey && document.activeElement === firstEl) {
+        e.preventDefault();
+        lastEl.focus();
+      } else if (!keyEvent.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        firstEl.focus();
+      }
+    };
+
+    trigger.addEventListener('click', openModal);
+    closeButtons.forEach(btn => btn.addEventListener('click', closeModal));
+
+    // Handle form submission (mock - replace with actual endpoint)
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitBtn = form.querySelector('.btn-submit') as HTMLButtonElement;
+      const btnText = submitBtn.querySelector('.btn-text') as HTMLElement;
+      const btnLoading = submitBtn.querySelector('.btn-loading') as HTMLElement;
+
+      // Show loading state
+      submitBtn.disabled = true;
+      btnText.hidden = true;
+      btnLoading.hidden = false;
+
+      try {
+        // Simulate API call - replace with actual endpoint
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        if (statusEl) {
+          statusEl.textContent = 'Thank you! Your feedback has been received.';
+          statusEl.className = 'form-status success';
+          statusEl.removeAttribute('hidden');
+        }
+
+        form.reset();
+        setTimeout(closeModal, 2000);
+      } catch {
+        if (statusEl) {
+          statusEl.textContent = 'Something went wrong. Please try again.';
+          statusEl.className = 'form-status error';
+          statusEl.removeAttribute('hidden');
+        }
+      } finally {
+        submitBtn.disabled = false;
+        btnText.hidden = false;
+        btnLoading.hidden = true;
+      }
+    });
+  };
+
+  initFeedbackModal();
+  document.addEventListener('astro:page-load', initFeedbackModal);
+</script>
