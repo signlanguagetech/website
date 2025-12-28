@@ -1,0 +1,30 @@
+You are working in an Astro (v5) + TypeScript website repo using pnpm.
+
+General
+- Prefer small, surgical changes; keep diffs minimal and readable.
+- Follow existing code style and patterns in nearby files.
+- Use clear naming; keep components and helpers focused.
+
+Project conventions
+- Always use pnpm for any command you run in this repo. Do NOT use `npm`, `npx`, or `yarn`.
+  - Use `pnpm add` / `pnpm remove` instead of `npm install` / `npm uninstall`
+  - Use `pnpm run <script>` (or `pnpm <script>`) instead of `npm run <script>`
+  - Use `pnpm dlx <pkg>` instead of `npx <pkg>`
+  - Use `pnpm exec <bin>` instead of `npx <bin>` when the binary is already installed
+- Astro components live in `src/components/*.astro`; pages in `src/pages`; layouts in `src/layouts`.
+- Prefer TypeScript for new logic in `src/helpers` or other TS modules.
+
+Do not touch generated/vendor content
+- Do NOT edit `dist/` or `node_modules/`.
+- Prefer editing source files under `src/` and assets under `public/`.
+
+Quality bar
+- After substantive changes, ensure `pnpm build` (runs `astro check`) passes.
+- If you introduce new types/interfaces, keep them simple and colocated unless reused broadly.
+- Avoid breaking links, routes, or content collections; update references when moving/renaming files.
+
+Docs & content
+- When editing `src/content`, preserve frontmatter/metadata and existing formatting.
+- Keep copy changes intentional; avoid rewriting unrelated prose.
+
+
