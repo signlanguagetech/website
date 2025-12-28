@@ -1,164 +1,174 @@
 ---
 import HeaderLink from './HeaderLink.astro';
-import SocialLinks from './SocialLinks.astro';
-import MenuNavigationIcon from './icons/MenuNavigationIcon.astro';
-import CrossIcon from './icons/CrossIcon.astro';
-import SltIcon from './icons/SltIcon.astro';
 import Search from './Search.astro';
 ---
 
-<header
-  class='header'
-  x-data=`{
-      toggle() { 
-        this.isOpen = !this.isOpen;
-        document.body.style.overflow = this.isOpen ? "hidden" : "";
-      },
-      dark: window.matchMedia("(prefers-color-scheme: dark)").matches,
-      isOpen: false,
-      width: 1920 
-    }`
-  x-init='width = window.innerWidth'
-  x-on:resize.window='width = window.innerWidth'
->
-  <nav class='nav'>
-    <!-- <strong x-text="dark"></strong> -->
-    <h1 class='sub-header'>
-      <a class='nav-link slt-link' href='/'>
-        <template x-if="dark">
-          <SltIcon height='32px' width='32px' dark={true} />
-        </template>
-        <template x-if="!dark">
-          <SltIcon height='32px' width='32px' />
-        </template>
-        <span class='slt-text'>Sign Language Tech</span>
-      </a>
-    </h1>
-    <Search />
-    <div class='menu-icon' @click='toggle'>
-      <span x-show='!isOpen'>
-        <MenuNavigationIcon height='32px' width='32px' />
-      </span>
-      <span x-show='isOpen'><CrossIcon height='32px' width='32px' /></span>
-    </div>
-    <div :class="(width < 720) && !isOpen && 'hidden'" class='tabs-group'>
-      <div class='tabs'>
+<header class='header' role="banner">
+  <nav class='nav' aria-label="Primary navigation">
+    <a class='nav-brand' href='/'>
+      <span class='brand-text'>Sign Language Tech</span>
+    </a>
+    
+    <button 
+      class='menu-toggle' 
+      aria-expanded="false" 
+      aria-controls="nav-menu"
+      aria-label="Toggle navigation menu"
+    >
+      <span class='menu-label'>Menu</span>
+    </button>
+    
+    <div class='nav-menu' id="nav-menu">
+      <div class='nav-links'>
         <HeaderLink href='/blog'>Watch in Sign Language</HeaderLink>
         <HeaderLink href='/glossary'>Learn Terms</HeaderLink>
         <HeaderLink href='/about'>Meet the Team</HeaderLink>
       </div>
-    </div>
-    <div class='social-links'>
-      <SocialLinks />
+      <Search />
     </div>
   </nav>
 </header>
 
+<script>
+  const toggle = document.querySelector('.menu-toggle');
+  const menu = document.querySelector('.nav-menu');
+  
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', (!expanded).toString());
+    menu?.classList.toggle('is-open');
+    document.body.style.overflow = expanded ? '' : 'hidden';
+  });
+
+  // Close menu on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu?.classList.contains('is-open')) {
+      toggle?.setAttribute('aria-expanded', 'false');
+      menu?.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  });
+</script>
+
 <style>
   .header {
-    margin: 0;
-    padding: 0 1em;
-    background: rgb(var(--white));
-    box-shadow: 0 2px 8px rgba(var(--black), 5%);
-    display: flex;
-    justify-content: center;
-  }
-
-  .sub-header {
-    margin: 0;
-    font-size: 1em;
-  }
-
-  .slt-link {
-    display: flex;
-    align-items: center;
-  }
-
-  .slt-text {
-    padding: 0 10px;
-  }
-
-  .hidden {
-    display: none;
+    padding: 0 var(--space-2);
+    background: var(--bg-base);
+    border-bottom: 1px solid var(--border);
   }
 
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 1200px;
+    max-width: var(--content-wide);
+    margin: 0 auto;
+    min-height: 72px;
   }
 
-  .nav a {
-    padding: 1em 0.5em;
-    border-bottom: 4px solid transparent;
-    text-decoration: none !important;
-  }
-
-  .nav a.active {
+  .nav-brand {
     text-decoration: none;
-    border-bottom-color: var(--black);
+    color: var(--text-primary);
   }
 
-  .menu-icon {
+  .brand-text {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .menu-toggle {
     display: none;
-    padding-top: 10px;
-    margin-left: 10px;
+    padding: var(--space-1) var(--space-2);
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
   }
 
-  .social-links {
+  .menu-toggle:hover {
+    background: var(--bg-surface);
+  }
+
+  .menu-label {
+    display: block;
+  }
+
+  .nav-menu {
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .nav-links :global(a) {
+    padding: var(--space-3) 0;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .nav-links :global(a:hover) {
+    opacity: 1;
+    border-bottom-color: var(--text-primary);
+  }
+
+  .nav-links :global(a.active) {
+    border-bottom-color: var(--text-primary);
   }
 
   @media (max-width: 720px) {
-    .sub-header {
-      width: 100%;
-      z-index: 10;
-    }
-
-    .social-links {
-      display: none;
-    }
-
-    .tabs-group {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      top: 70px;
-      left: 0;
-      z-index: 100;
-      background-color: rgb(var(--white));
-    }
-
-    .tabs {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .menu-icon {
+    .menu-toggle {
       display: block;
     }
 
-    @media (prefers-color-scheme: dark) {
-      .tabs-group {
-        background-color: rgb(var(--gray-dark));
-      }
+    .nav-menu {
+      display: none;
+      position: fixed;
+      top: 73px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      flex-direction: column;
+      align-items: stretch;
+      padding: var(--space-4);
+      background: var(--bg-base);
+      border-top: 1px solid var(--border);
+      z-index: 100;
     }
 
+    .nav-menu.is-open {
+      display: flex;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .nav-links :global(a) {
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links :global(a:last-child) {
+      border-bottom: none;
+    }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .header {
-      background-color: rgb(var(--gray-dark));
-    }
-    .slt-link {
-      color: rgb(var(--white))
-    }
-
-    .nav a.active {
-      border-bottom-color: rgba(var(--white), 0.5)
+  @media (prefers-reduced-motion: reduce) {
+    .nav-links :global(a) {
+      transition: none;
     }
   }
 </style>

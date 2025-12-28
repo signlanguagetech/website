@@ -22,79 +22,112 @@ const {
   imageUrl,
   imageAlt = "Event image",
   ctaHref,
-  ctaText = "Register Now",
+  ctaText = "Register",
 } = Astro.props;
 ---
 
-<article class="event-card" data-event-start={dateTime} data-event-end={endDateTime}>
+<article class="event" data-event-start={dateTime} data-event-end={endDateTime}>
+  <div class="event-content">
+    <div class="event-meta">
+      <span class="event-date-display">Loading...</span>
+      <span class="event-divider">·</span>
+      <span class="event-location">
+        {isVirtual ? "Online Event" : location}
+      </span>
+    </div>
+
+    <h3 class="event-title">{title}</h3>
+
+    {description && <p class="event-description">{description}</p>}
+
+    <a href={ctaHref} class="event-link" target="_blank" rel="noopener noreferrer">
+      {ctaText} →
+    </a>
+  </div>
+
   {imageUrl && (
     <div class="event-image">
       <img src={imageUrl} alt={imageAlt} loading="lazy" />
     </div>
   )}
-  
-  <div class="event-content">
-    <div class="event-tags">
-      {isVirtual ? (
-        <span class="tag tag-virtual">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"></path>
-            <rect x="3" y="6" width="12" height="12" rx="2" ry="2"></rect>
-          </svg>
-          Online Event
-        </span>
-      ) : (
-        <span class="tag tag-location">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-          {location}
-        </span>
-      )}
-    </div>
-
-    <h3 class="event-title">{title}</h3>
-
-    <div class="event-datetime">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-        <line x1="16" y1="2" x2="16" y2="6"></line>
-        <line x1="8" y1="2" x2="8" y2="6"></line>
-        <line x1="3" y1="10" x2="21" y2="10"></line>
-      </svg>
-      <span class="event-date-display">Loading...</span>
-    </div>
-
-    {description && <p class="event-description">{description}</p>}
-
-    <a href={ctaHref} class="event-cta" target="_blank" rel="noopener noreferrer">
-      {ctaText}
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
-      </svg>
-    </a>
-  </div>
 </article>
 
 <style>
-  .event-card {
-    background: var(--bg-elevated, #fff);
-    border: 1px solid var(--border-subtle, #E2E8F0);
-    border-radius: 16px;
-    overflow: hidden;
+  .event {
     display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-6);
+    padding: var(--space-6) 0;
+    border-bottom: 1px solid var(--border);
   }
 
-  .event-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  .event:first-child {
+    padding-top: 0;
+  }
+
+  .event:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .event-content {
+    flex: 1;
+  }
+
+  .event-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .event-divider {
+    color: var(--text-muted);
+  }
+
+  .event-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 var(--space-2);
+    line-height: 1.3;
+    color: var(--text-primary);
+  }
+
+  .event-description {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+    line-height: 1.6;
+  }
+
+  .event-link {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid currentColor;
+    transition: opacity 0.2s ease;
+  }
+
+  .event-link:hover {
+    opacity: 0.7;
+  }
+
+  .event-link:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
 
   .event-image {
+    flex-shrink: 0;
+    width: 200px;
     aspect-ratio: 16 / 9;
     overflow: hidden;
   }
@@ -103,163 +136,33 @@ const {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0;
-    transition: transform 0.3s ease;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
   }
 
-  .event-card:hover .event-image img {
-    transform: scale(1.05);
+  .event:hover .event-image img {
+    filter: grayscale(0%);
   }
 
-  .event-content {
-    padding: 1.25rem 1.5rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-
-  .event-tags {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.35rem 0.65rem;
-    border-radius: 6px;
-  }
-
-  .tag svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .tag-virtual {
-    background: rgba(99, 102, 241, 0.15);
-    color: #4F46E5;
-    border: 1px solid rgba(99, 102, 241, 0.3);
-  }
-
-  .tag-location {
-    background: rgba(20, 184, 166, 0.15);
-    color: var(--accent-teal, #0D9488);
-    border: 1px solid rgba(20, 184, 166, 0.3);
-  }
-
-  .event-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin: 0 0 0.75rem;
-    line-height: 1.3;
-    color: var(--fg-primary, rgb(var(--black)));
-  }
-
-  .event-datetime {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--fg-secondary, rgb(var(--gray)));
-    margin-bottom: 0.75rem;
-  }
-
-  .event-datetime svg {
-    width: 18px;
-    height: 18px;
-    color: var(--accent-teal, #0D9488);
-    flex-shrink: 0;
-  }
-
-  .event-description {
-    font-size: 0.9rem;
-    color: var(--fg-secondary, rgb(var(--gray)));
-    margin: 0 0 1.25rem;
-    line-height: 1.5;
-    flex-grow: 1;
-  }
-
-  .event-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    background: var(--accent-teal, #0D9488);
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-decoration: none;
-    border-radius: 10px;
-    transition: background 0.2s ease, transform 0.2s ease;
-  }
-
-  .event-cta:hover {
-    background: var(--accent-teal-light, #14B8A6);
-    transform: translateY(-1px);
-    color: #fff;
-  }
-
-  .event-cta:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-  }
-
-  .event-cta svg {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.2s ease;
-  }
-
-  .event-cta:hover svg {
-    transform: translateX(3px);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .event-card {
-      background: var(--bg-elevated, #111827);
-      border-color: var(--border-subtle, #1F2937);
+  @media (max-width: 720px) {
+    .event {
+      flex-direction: column-reverse;
+      gap: var(--space-3);
     }
 
-    .event-card:hover {
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .event-title {
-      color: rgba(var(--white), 0.9);
-    }
-
-    .event-datetime,
-    .event-description {
-      color: rgba(var(--white), 0.6);
-    }
-
-    .tag-virtual {
-      color: #A5B4FC;
+    .event-image {
+      width: 100%;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .event-card,
-    .event-image img,
-    .event-cta,
-    .event-cta svg {
+    .event-link,
+    .event-image img {
       transition: none;
     }
 
-    .event-card:hover,
-    .event-cta:hover {
-      transform: none;
-    }
-
-    .event-card:hover .event-image img {
-      transform: none;
+    .event:hover .event-image img {
+      filter: grayscale(100%);
     }
   }
 </style>
@@ -268,11 +171,11 @@ const {
   import { parseAndFormatEventDateTime } from '../helpers/dateTime.helper';
 
   const initEventCards = () => {
-    const cards = document.querySelectorAll('.event-card[data-event-start]');
-    cards.forEach((card) => {
-      const startDateStr = card.getAttribute('data-event-start');
-      const endDateStr = card.getAttribute('data-event-end');
-      const dateDisplay = card.querySelector('.event-date-display');
+    const events = document.querySelectorAll('.event[data-event-start]');
+    events.forEach((event) => {
+      const startDateStr = event.getAttribute('data-event-start');
+      const endDateStr = event.getAttribute('data-event-end');
+      const dateDisplay = event.querySelector('.event-date-display');
 
       if (startDateStr && dateDisplay) {
         const { date, time } = parseAndFormatEventDateTime(startDateStr, endDateStr);
@@ -284,4 +187,3 @@ const {
   initEventCards();
   document.addEventListener('astro:page-load', initEventCards);
 </script>
-
