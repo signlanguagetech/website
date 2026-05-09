@@ -10,6 +10,7 @@ const CALENDAR_URL = 'https://luma.com/signlanguagetech';
 interface EventCache {
   fingerprint: string;
   updatedAt: string;
+  event: import('../src/helpers/lumaEvents.helper.ts').LumaEvent | null;
 }
 
 const next = await fetchNextLumaEvent(CALENDAR_URL);
@@ -27,6 +28,6 @@ if (cached?.fingerprint === fingerprint) {
   process.exit(0);
 }
 
-const cache: EventCache = { fingerprint, updatedAt: new Date().toISOString() };
+const cache: EventCache = { fingerprint, updatedAt: new Date().toISOString(), event: next };
 writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
 console.log('event changed, cache updated');

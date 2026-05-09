@@ -4,9 +4,10 @@ import Layout from '../layouts/Layout.astro';
 import SltStackImg from '../components/icons/SltStackImg.astro';
 import BookAppointmentButton from '../components/BookAppointmentButton.astro';
 import EventBanner from '../components/EventBanner.astro';
-import { fetchNextLumaEvent } from '../helpers/lumaEvents.helper';
+import type { LumaEvent } from '../helpers/lumaEvents.helper';
+import lumaCache from '../data/luma-event-cache.json';
 
-const nextEvent = await fetchNextLumaEvent('https://luma.com/signlanguagetech');
+const nextEvent = (lumaCache.event ?? null) as LumaEvent | null;
 ---
 
 <Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
