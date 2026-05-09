@@ -1,0 +1,47 @@
+name: Check Luma Events
+
+on:
+  schedule:
+    - cron: '0 9 */15 * *'
+  workflow_dispatch:
+
+jobs:
+  check-original:
+    runs-on: ubuntu-latest
+    outputs:
+      is_original: ${{ github.repository == 'signlanguagetech/website' }}
+    steps:
+      - run: echo "Checking if original repo"
+
+  check-event:
+    needs: check-original
+    if: needs.check-original.outputs.is_original == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check for new Luma event
+        id: check
+        run: |
+          output=$(pnpm tsx scripts/check-luma-event.ts)
+          echo "result=$output" >> $GITHUB_OUTPUT
+
+      - name: Commit cache if event changed
+        if: steps.check.outputs.result != 'same event, skip'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/luma-event-cache.json
+          git commit -m "chore: update luma event cache"
+          git push
