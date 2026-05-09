@@ -1,0 +1,309 @@
+---
+interface Props {
+  eventTitle: string;
+  eventDateTime: string; // ISO 8601 format, e.g., "2025-01-21T18:00:00Z"
+  eventEndDateTime?: string; // Optional end time in ISO 8601 format
+  eventLocation: string;
+  lumaUrl: string;
+  description?: string;
+}
+
+const { 
+  eventTitle, 
+  eventDateTime,
+  eventEndDateTime,
+  eventLocation, 
+  lumaUrl,
+  description 
+} = Astro.props;
+---
+
+<section class="event-banner" aria-label="Upcoming Event" data-event-start={eventDateTime} data-event-end={eventEndDateTime}>
+  <div class="event-glow"></div>
+  <div class="event-content">
+    <div class="event-badge">
+      <span class="pulse"></span>
+      <span class="badge-text">Upcoming Event</span>
+    </div>
+    
+    <h2 class="event-title">{eventTitle}</h2>
+    
+    {description && <p class="event-description">{description}</p>}
+    
+    <div class="event-details">
+      <div class="detail-item">
+        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span class="event-date-display">Loading...</span>
+      </div>
+      
+      <div class="detail-item">
+        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span class="event-time-display">Loading...</span>
+      </div>
+      
+      <div class="detail-item">
+        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <span>{eventLocation}</span>
+      </div>
+    </div>
+    
+    <a href={lumaUrl} target="_blank" rel="noopener noreferrer" class="event-cta">
+      <span class="cta-text">Register on Luma</span>
+      <svg class="cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<style>
+  .event-banner {
+    position: relative;
+    margin-bottom: 3rem;
+    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    overflow: hidden;
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.15),
+      0 8px 40px rgba(15, 52, 96, 0.2);
+    animation: slideIn 0.6s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .event-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(99, 102, 241, 0.15) 0%,
+      transparent 50%
+    );
+    animation: rotateGlow 20s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes rotateGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .event-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .event-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 50px;
+    margin-bottom: 1rem;
+  }
+
+  .pulse {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+  }
+
+  .badge-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #a5b4fc;
+  }
+
+  .event-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .event-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  .event-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+  }
+
+  .detail-icon {
+    width: 18px;
+    height: 18px;
+    color: #818cf8;
+    flex-shrink: 0;
+  }
+
+  .event-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  }
+
+  .event-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+    color: #ffffff;
+  }
+
+  .event-cta:active {
+    transform: translateY(0);
+  }
+
+  .cta-arrow {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+  }
+
+  .event-cta:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 720px) {
+    .event-banner {
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .event-title {
+      font-size: 1.35rem;
+    }
+
+    .event-details {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .event-cta {
+      width: 100%;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+  }
+
+  /* Dark mode already handled by the banner's own dark theme */
+  @media (prefers-color-scheme: dark) {
+    .event-banner {
+      box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        0 8px 40px rgba(99, 102, 241, 0.1);
+    }
+  }
+</style>
+
+<script>
+  import { parseAndFormatEventDateTime } from '../helpers/dateTime.helper';
+
+  /** Extracts event data attributes from the banner element */
+  const getEventDataFromBanner = (banner: Element) => ({
+    startDateStr: banner.getAttribute('data-event-start'),
+    endDateStr: banner.getAttribute('data-event-end'),
+  });
+
+  /** Updates the DOM with formatted date/time values */
+  const updateEventDisplay = (date: string, time: string) => {
+    const dateDisplay = document.querySelector('.event-date-display');
+    const timeDisplay = document.querySelector('.event-time-display');
+
+    if (dateDisplay) dateDisplay.textContent = date;
+    if (timeDisplay) timeDisplay.textContent = time;
+  };
+
+  /** Main function to format and display event datetime */
+  const initEventBanner = () => {
+    const banner = document.querySelector('.event-banner');
+    if (!banner) return;
+
+    const { startDateStr, endDateStr } = getEventDataFromBanner(banner);
+    if (!startDateStr) return;
+
+    const { date, time } = parseAndFormatEventDateTime(startDateStr, endDateStr);
+    updateEventDisplay(date, time);
+  };
+
+  /** Cleanup function to remove event listeners */
+  const cleanupEventBanner = () => {
+    document.removeEventListener('astro:page-load', initEventBanner);
+    document.removeEventListener('astro:before-swap', cleanupEventBanner);
+  };
+
+  // Initialize on page load
+  initEventBanner();
+
+  // Re-initialize on Astro view transitions
+  document.addEventListener('astro:page-load', initEventBanner);
+
+  // Cleanup before page swap (Astro view transitions)
+  document.addEventListener('astro:before-swap', cleanupEventBanner);
+</script>
+
