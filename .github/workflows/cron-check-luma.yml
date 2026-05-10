@@ -5,17 +5,12 @@ on:
     - cron: '0 9 * * 1'
   workflow_dispatch:
 
-jobs:
-  check-original:
-    runs-on: ubuntu-latest
-    outputs:
-      is_original: ${{ github.repository == 'signlanguagetech/website' }}
-    steps:
-      - run: echo "Checking if original repo"
+permissions:
+  contents: write
 
+jobs:
   check-event:
-    needs: check-original
-    if: needs.check-original.outputs.is_original == 'true'
+    if: github.repository == 'signlanguagetech/website'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +24,7 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Check for new Luma event
         run: pnpm tsx scripts/check-luma-event.ts
