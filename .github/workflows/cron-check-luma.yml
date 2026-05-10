@@ -32,14 +32,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Check for new Luma event
-        id: check
-        run: |
-          output=$(pnpm tsx scripts/check-luma-event.ts)
-          echo "result=$output" >> $GITHUB_OUTPUT
+        run: pnpm tsx scripts/check-luma-event.ts
 
       - name: Commit cache if event changed
-        if: steps.check.outputs.result != 'same event, skip'
         run: |
+          if git diff --quiet src/data/luma-event-cache.json; then
+            echo "No change, skip"
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add src/data/luma-event-cache.json
