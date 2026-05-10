@@ -26,13 +26,22 @@ function parseNextEvent(blocks: unknown[], now: Temporal.Instant, fallbackUrl: s
 
     const upcoming = list.itemListElement
       .map(e => e.item)
-      .filter(e => e['@type'] === 'Event' && Temporal.Instant.from(e.startDate).epochMilliseconds > now.epochMilliseconds)
+      .filter(e => {
+        if (e['@type'] !== 'Event') return false;
+        try { return Temporal.Instant.from(e.startDate).epochMilliseconds > now.epochMilliseconds; }
+        catch { return false; }
+      })
       .sort((a, b) => Temporal.Instant.from(a.startDate).epochMilliseconds - Temporal.Instant.from(b.startDate).epochMilliseconds);
 
     if (upcoming.length === 0) return null;
 
     const e = upcoming[0];
-    const eventUrl = e.url?.startsWith('https://') ? e.url : fallbackUrl;
+    const ALLOWED_DOMAINS = new Set(['luma.com', 'lu.ma']);
+    const isAllowedUrl = (() => {
+      try { return ALLOWED_DOMAINS.has(new URL(e.url).hostname.replace('www.', '')); }
+      catch { return false; }
+    })();
+    const eventUrl = isAllowedUrl ? e.url : fallbackUrl;
     return {
       title: e.name,
       start: Temporal.Instant.from(e.startDate).toString(),
