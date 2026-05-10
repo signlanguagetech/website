@@ -22,7 +22,7 @@ jobs:
       - run: bun install --frozen-lockfile
 
       - name: Check for new Luma event
-        run: bun scripts/check-luma-event.ts
+        run: bun scripts/checkLumaEvent.ts
 
       - name: Commit cache if event changed
         run: |
