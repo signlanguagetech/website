@@ -19,7 +19,7 @@ function extractJsonLdBlocks(html: string): unknown[] {
   return results;
 }
 
-function parseNextEvent(blocks: unknown[], now: Temporal.Instant): LumaEvent | null {
+function parseNextEvent(blocks: unknown[], now: Temporal.Instant, fallbackUrl: string): LumaEvent | null {
   for (const block of blocks) {
     const list = block as JsonLdItemList;
     if (list['@type'] !== 'ItemList' || !Array.isArray(list.itemListElement)) continue;
@@ -32,13 +32,14 @@ function parseNextEvent(blocks: unknown[], now: Temporal.Instant): LumaEvent | n
     if (upcoming.length === 0) return null;
 
     const e = upcoming[0];
+    const eventUrl = e.url?.startsWith('https://') ? e.url : fallbackUrl;
     return {
       title: e.name,
       start: Temporal.Instant.from(e.startDate).toString(),
       end: e.endDate ? Temporal.Instant.from(e.endDate).toString() : undefined,
       location: e.location?.name ?? 'Online Event',
       description: e.description,
-      url: e.url,
+      url: eventUrl,
     };
   }
 
@@ -51,5 +52,5 @@ export async function fetchNextLumaEvent(calendarUrl: string): Promise<LumaEvent
 
   const html = await res.text();
   const blocks = extractJsonLdBlocks(html);
-  return parseNextEvent(blocks, Temporal.Now.instant());
+  return parseNextEvent(blocks, Temporal.Now.instant(), calendarUrl);
 }
