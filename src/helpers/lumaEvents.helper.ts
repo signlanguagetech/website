@@ -1,3 +1,4 @@
+import 'temporal-polyfill/global';
 import type { LumaEvent, JsonLdItemList } from '../types/luma';
 
 function extractJsonLdBlocks(html: string): unknown[] {
@@ -18,23 +19,23 @@ function extractJsonLdBlocks(html: string): unknown[] {
   return results;
 }
 
-function parseNextEvent(blocks: unknown[], now: Date): LumaEvent | null {
+function parseNextEvent(blocks: unknown[], now: Temporal.Instant): LumaEvent | null {
   for (const block of blocks) {
     const list = block as JsonLdItemList;
     if (list['@type'] !== 'ItemList' || !Array.isArray(list.itemListElement)) continue;
 
     const upcoming = list.itemListElement
       .map(e => e.item)
-      .filter(e => e['@type'] === 'Event' && new Date(e.startDate) > now)
-      .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+      .filter(e => e['@type'] === 'Event' && Temporal.Instant.from(e.startDate).epochMilliseconds > now.epochMilliseconds)
+      .sort((a, b) => Temporal.Instant.from(a.startDate).epochMilliseconds - Temporal.Instant.from(b.startDate).epochMilliseconds);
 
     if (upcoming.length === 0) return null;
 
     const e = upcoming[0];
     return {
       title: e.name,
-      start: new Date(e.startDate).toISOString(),
-      end: e.endDate ? new Date(e.endDate).toISOString() : undefined,
+      start: Temporal.Instant.from(e.startDate).toString(),
+      end: e.endDate ? Temporal.Instant.from(e.endDate).toString() : undefined,
       location: e.location?.name ?? 'Online Event',
       description: e.description,
       url: e.url,
@@ -50,5 +51,5 @@ export async function fetchNextLumaEvent(calendarUrl: string): Promise<LumaEvent
 
   const html = await res.text();
   const blocks = extractJsonLdBlocks(html);
-  return parseNextEvent(blocks, new Date());
+  return parseNextEvent(blocks, Temporal.Now.instant());
 }

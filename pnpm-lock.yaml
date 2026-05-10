@@ -45,6 +45,9 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
     devDependencies:
+      temporal-polyfill:
+        specifier: ^0.3.2
+        version: 0.3.2
       tsx:
         specifier: ^4.21.0
         version: 4.21.0
@@ -2123,6 +2126,12 @@ packages:
     resolution: {integrity: sha512-VvrHQ+9uniE+Mvx3+C9IEe/lWasXCU0nXMY2kZeLrHNICuRiC8uMPyM14UEaMOFA5mhyQqEkB02VoQ16n3DLaw==}
     engines: {node: '>=16'}
     hasBin: true
+
+  temporal-polyfill@0.3.2:
+    resolution: {integrity: sha512-TzHthD/heRK947GNiSu3Y5gSPpeUDH34+LESnfsq8bqpFhsB79HFBX8+Z834IVX68P3EUyRPZK5bL/1fh437Eg==}
+
+  temporal-spec@0.3.1:
+    resolution: {integrity: sha512-B4TUhezh9knfSIMwt7RVggApDRJZo73uZdj8AacL2mZ8RP5KtLianh2MXxL06GN9ESYiIsiuoLQhgVfwe55Yhw==}
 
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
@@ -5052,6 +5061,12 @@ snapshots:
       csso: 5.0.5
       picocolors: 1.1.1
       sax: 1.4.1
+
+  temporal-polyfill@0.3.2:
+    dependencies:
+      temporal-spec: 0.3.1
+
+  temporal-spec@0.3.1: {}
 
   tiny-inflate@1.0.3: {}
 
