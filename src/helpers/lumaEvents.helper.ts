@@ -1,26 +1,4 @@
-export interface LumaEvent {
-  title: string;
-  start: string;
-  end?: string;
-  location: string;
-  description?: string;
-  url: string;
-}
-
-interface JsonLdEvent {
-  '@type': string;
-  url: string;
-  name: string;
-  startDate: string;
-  endDate?: string;
-  description?: string;
-  location?: { name?: string };
-}
-
-interface JsonLdItemList {
-  '@type': string;
-  itemListElement: { item: JsonLdEvent }[];
-}
+import type { LumaEvent, JsonLdItemList } from '../types/luma';
 
 function extractJsonLdBlocks(html: string): unknown[] {
   const results: unknown[] = [];

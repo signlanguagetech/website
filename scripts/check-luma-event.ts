@@ -1,26 +1,21 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { fetchNextLumaEvent, type LumaEvent } from '../src/helpers/lumaEvents.helper.ts';
+import { fetchNextLumaEvent } from '../src/helpers/lumaEvents.helper.ts';
+import type { LumaEvent, LumaEventCache } from '../src/types/luma.ts';
 
 const CACHE_PATH = resolve(import.meta.dirname, '../src/data/luma-event-cache.json');
 const CALENDAR_URL = 'https://luma.com/signlanguagetech';
-
-interface EventCache {
-  fingerprint: string;
-  updatedAt: string;
-  event: LumaEvent | null;
-}
 
 function fingerprint(event: LumaEvent | null): string {
   return event ? `${event.title}|${event.start}|${event.end ?? ''}` : 'no-event';
 }
 
-function readCache(): EventCache | null {
+function readCache(): LumaEventCache | null {
   return existsSync(CACHE_PATH) ? JSON.parse(readFileSync(CACHE_PATH, 'utf-8')) : null;
 }
 
 function writeCache(event: LumaEvent | null): void {
-  const cache: EventCache = { fingerprint: fingerprint(event), updatedAt: new Date().toISOString(), event };
+  const cache: LumaEventCache = { fingerprint: fingerprint(event), updatedAt: new Date().toISOString(), event };
   writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
 }
 
