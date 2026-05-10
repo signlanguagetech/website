@@ -2,7 +2,7 @@ name: Check Luma Events
 
 on:
   schedule:
-    - cron: '0 9 */15 * *'
+    - cron: '0 9 * * 1'
   workflow_dispatch:
 
 jobs:
