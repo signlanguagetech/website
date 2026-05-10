@@ -1,55 +1,39 @@
 import 'temporal-polyfill/global';
-import type { LumaEvent, JsonLdItemList } from '../types/luma';
+import type { LumaEvent, JsonLdEvent, JsonLdItemList } from '../types/luma';
+import { extractJsonLdBlocks } from './jsonLd.helper';
+import { sanitizeEventUrl } from './url.helper';
 
-function extractJsonLdBlocks(html: string): unknown[] {
-  const results: unknown[] = [];
-  const parts = html.split('application/ld+json');
-
-  for (let i = 1; i < parts.length; i++) {
-    const start = parts[i].indexOf('>') + 1;
-    const end = parts[i].indexOf('</script>');
-    if (start === 0 || end === -1) continue;
-    try {
-      results.push(JSON.parse(parts[i].slice(start, end)));
-    } catch {
-      // malformed block, skip
-    }
+function isUpcomingEvent(event: JsonLdEvent, now: Temporal.Instant): boolean {
+  try {
+    return Temporal.Instant.from(event.startDate).epochMilliseconds > now.epochMilliseconds;
+  } catch {
+    return false;
   }
-
-  return results;
 }
 
-function parseNextEvent(blocks: unknown[], now: Temporal.Instant, fallbackUrl: string): LumaEvent | null {
+function toLumaEvent(event: JsonLdEvent, fallbackUrl: string): LumaEvent {
+  return {
+    title: event.name,
+    start: Temporal.Instant.from(event.startDate).toString(),
+    end: event.endDate ? Temporal.Instant.from(event.endDate).toString() : undefined,
+    location: event.location?.name ?? 'Online Event',
+    description: event.description,
+    url: sanitizeEventUrl(event.url, fallbackUrl),
+  };
+}
+
+function findNextEvent(blocks: unknown[], now: Temporal.Instant, fallbackUrl: string): LumaEvent | null {
   for (const block of blocks) {
     const list = block as JsonLdItemList;
     if (list['@type'] !== 'ItemList' || !Array.isArray(list.itemListElement)) continue;
 
     const upcoming = list.itemListElement
       .map(e => e.item)
-      .filter(e => {
-        if (e['@type'] !== 'Event') return false;
-        try { return Temporal.Instant.from(e.startDate).epochMilliseconds > now.epochMilliseconds; }
-        catch { return false; }
-      })
+      .filter(e => e['@type'] === 'Event' && isUpcomingEvent(e, now))
       .sort((a, b) => Temporal.Instant.from(a.startDate).epochMilliseconds - Temporal.Instant.from(b.startDate).epochMilliseconds);
 
     if (upcoming.length === 0) return null;
-
-    const e = upcoming[0];
-    const ALLOWED_DOMAINS = new Set(['luma.com', 'lu.ma']);
-    const isAllowedUrl = (() => {
-      try { return ALLOWED_DOMAINS.has(new URL(e.url).hostname.replace('www.', '')); }
-      catch { return false; }
-    })();
-    const eventUrl = isAllowedUrl ? e.url : fallbackUrl;
-    return {
-      title: e.name,
-      start: Temporal.Instant.from(e.startDate).toString(),
-      end: e.endDate ? Temporal.Instant.from(e.endDate).toString() : undefined,
-      location: e.location?.name ?? 'Online Event',
-      description: e.description,
-      url: eventUrl,
-    };
+    return toLumaEvent(upcoming[0], fallbackUrl);
   }
 
   return null;
@@ -61,5 +45,5 @@ export async function fetchNextLumaEvent(calendarUrl: string): Promise<LumaEvent
 
   const html = await res.text();
   const blocks = extractJsonLdBlocks(html);
-  return parseNextEvent(blocks, Temporal.Now.instant(), calendarUrl);
+  return findNextEvent(blocks, Temporal.Now.instant(), calendarUrl);
 }
