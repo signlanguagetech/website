@@ -11,7 +11,7 @@ const { class: className } = Astro.props;
   <span id="book-appointment"></span>
 </div>
 
-<script>
+<script is:inline data-cfasync="false" type="module">
 (function() {
   let target = document.getElementById('book-appointment');
   window.addEventListener('load', function() {
