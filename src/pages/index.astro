@@ -8,6 +8,18 @@ import EventBanner from '../components/EventBanner.astro';
 ---
 
 <Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <Fragment slot='head'>
+    <link
+      href='https://calendar.google.com/calendar/scheduling-button-script.css'
+      rel='stylesheet'
+    />
+    <script
+      is:inline
+      src='https://calendar.google.com/calendar/scheduling-button-script.js'
+      async
+    ></script>
+  </Fragment>
+
   <main class='main-content'>
     <EventBanner
       eventTitle="Tech Talks Meetup - Deaf Developers Edition"
