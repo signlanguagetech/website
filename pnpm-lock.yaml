@@ -16,7 +16,7 @@ importers:
         version: 0.9.6(prettier@3.7.4)(typescript@5.8.3)
       '@astrojs/mdx':
         specifier: ^4.3.13
-        version: 4.3.13(astro@5.16.6(@types/node@24.3.0)(jiti@2.4.2)(rollup@4.46.3)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.8.0))
+        version: 4.3.13(astro@5.16.6(@types/node@24.3.0)(rollup@4.46.3)(typescript@5.8.3)(yaml@2.8.0))
       '@astrojs/rss':
         specifier: ^4.0.14
         version: 4.0.14
@@ -37,7 +37,7 @@ importers:
         version: 3.14.9
       astro:
         specifier: ^5.16.6
-        version: 5.16.6(@types/node@24.3.0)(jiti@2.4.2)(rollup@4.46.3)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.8.0)
+        version: 5.16.6(@types/node@24.3.0)(rollup@4.46.3)(typescript@5.8.3)(yaml@2.8.0)
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
@@ -1031,6 +1031,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@volar/kit@2.4.27':
     resolution: {integrity: sha512-ilZoQDMLzqmSsImJRWx4YiZ4FcvvPrPnFVmL6hSsIWB6Bn3qc7k88J9yP32dagrs5Y8EXIlvvD/mAFaiuEOACQ==}
@@ -1590,10 +1591,6 @@ packages:
   is-wsl@3.1.0:
     resolution: {integrity: sha512-UcVfVfaK4Sc4m7X3dUSoHoozQGBEFeDC+zVo06t98xe8CzHSZZBekNXH+tu0NalHolcJ/QAGqS46Hef7QXBIMw==}
     engines: {node: '>=16'}
-
-  jiti@2.4.2:
-    resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
-    hasBin: true
 
   js-yaml@4.1.1:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
@@ -2709,12 +2706,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/mdx@4.3.13(astro@5.16.6(@types/node@24.3.0)(jiti@2.4.2)(rollup@4.46.3)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.8.0))':
+  '@astrojs/mdx@4.3.13(astro@5.16.6(@types/node@24.3.0)(rollup@4.46.3)(typescript@5.8.3)(yaml@2.8.0))':
     dependencies:
       '@astrojs/markdown-remark': 6.3.10
       '@mdx-js/mdx': 3.1.1
       acorn: 8.15.0
-      astro: 5.16.6(@types/node@24.3.0)(jiti@2.4.2)(rollup@4.46.3)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.8.0)
+      astro: 5.16.6(@types/node@24.3.0)(rollup@4.46.3)(typescript@5.8.3)(yaml@2.8.0)
       es-module-lexer: 1.7.0
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.5
@@ -3469,7 +3466,7 @@ snapshots:
 
   astring@1.9.0: {}
 
-  astro@5.16.6(@types/node@24.3.0)(jiti@2.4.2)(rollup@4.46.3)(tsx@4.21.0)(typescript@5.8.3)(yaml@2.8.0):
+  astro@5.16.6(@types/node@24.3.0)(rollup@4.46.3)(typescript@5.8.3)(yaml@2.8.0):
     dependencies:
       '@astrojs/compiler': 2.13.0
       '@astrojs/internal-helpers': 0.7.5
@@ -3526,8 +3523,8 @@ snapshots:
       unist-util-visit: 5.0.0
       unstorage: 1.17.3
       vfile: 6.0.3
-      vite: 6.4.1(@types/node@24.3.0)(jiti@2.4.2)(tsx@4.21.0)(yaml@2.8.0)
-      vitefu: 1.1.1(vite@6.4.1(@types/node@24.3.0)(jiti@2.4.2)(tsx@4.21.0)(yaml@2.8.0))
+      vite: 6.4.1(@types/node@24.3.0)(yaml@2.8.0)
+      vitefu: 1.1.1(vite@6.4.1(@types/node@24.3.0)(yaml@2.8.0))
       xxhash-wasm: 1.1.0
       yargs-parser: 21.1.1
       yocto-spinner: 0.2.3
@@ -4131,9 +4128,6 @@ snapshots:
   is-wsl@3.1.0:
     dependencies:
       is-inside-container: 1.0.0
-
-  jiti@2.4.2:
-    optional: true
 
   js-yaml@4.1.1:
     dependencies:
@@ -5220,7 +5214,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite@6.4.1(@types/node@24.3.0)(jiti@2.4.2)(tsx@4.21.0)(yaml@2.8.0):
+  vite@6.4.1(@types/node@24.3.0)(yaml@2.8.0):
     dependencies:
       esbuild: 0.25.9
       fdir: 6.5.0(picomatch@4.0.3)
@@ -5231,13 +5225,11 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.3.0
       fsevents: 2.3.3
-      jiti: 2.4.2
-      tsx: 4.21.0
       yaml: 2.8.0
 
-  vitefu@1.1.1(vite@6.4.1(@types/node@24.3.0)(jiti@2.4.2)(tsx@4.21.0)(yaml@2.8.0)):
+  vitefu@1.1.1(vite@6.4.1(@types/node@24.3.0)(yaml@2.8.0)):
     optionalDependencies:
-      vite: 6.4.1(@types/node@24.3.0)(jiti@2.4.2)(tsx@4.21.0)(yaml@2.8.0)
+      vite: 6.4.1(@types/node@24.3.0)(yaml@2.8.0)
 
   volar-service-css@0.0.67(@volar/language-service@2.4.27):
     dependencies:
