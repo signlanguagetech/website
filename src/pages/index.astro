@@ -4,7 +4,10 @@ import Layout from '../layouts/Layout.astro';
 import SltStackImg from '../components/icons/SltStackImg.astro';
 import BookAppointmentButton from '../components/BookAppointmentButton.astro';
 import EventBanner from '../components/EventBanner.astro';
+import type { LumaEvent } from '../types/luma';
+import lumaCache from '../data/luma-event-cache.json';
 
+const nextEvent = (lumaCache.event ?? null) as LumaEvent | null;
 ---
 
 <Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
@@ -21,14 +24,16 @@ import EventBanner from '../components/EventBanner.astro';
   </Fragment>
 
   <main class='main-content'>
-    <EventBanner
-      eventTitle="Tech Talks Meetup - Deaf Developers Edition"
-      eventDateTime="2026-05-20T17:00:00Z"
-      eventEndDateTime="2026-05-20T18:00:00Z"
-      eventLocation="Online Event"
-      description="Join us for a tech meetup featuring Deaf developers, learn TypeScript, and grow together! 🚀"
-      lumaUrl="https://luma.com/069iewt6"
-    />
+    {nextEvent && (
+      <EventBanner
+        eventTitle={nextEvent.title}
+        eventDateTime={nextEvent.start}
+        eventEndDateTime={nextEvent.end}
+        eventLocation={nextEvent.location}
+        description={nextEvent.description}
+        lumaUrl={nextEvent.url}
+      />
+    )}
     
     <section class='main-content__intro'>
       <div class='section-left'>
