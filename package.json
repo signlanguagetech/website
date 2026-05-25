@@ -24,6 +24,7 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "temporal-polyfill": "^0.3.2"
+    "temporal-polyfill": "^0.3.2",
+    "tsx": "^4.22.3"
   }
 }
