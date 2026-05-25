@@ -1,5 +1,11 @@
 {
-  "fingerprint": "no-event",
-  "updatedAt": "2026-05-09T19:52:24.086Z",
-  "event": null
+  "fingerprint": "Tech Talks Meetup with Sign Language Tech|2026-06-23T17:00:00Z|2026-06-23T18:00:00Z",
+  "updatedAt": "2026-05-25T15:53:32.298Z",
+  "event": {
+    "title": "Tech Talks Meetup with Sign Language Tech",
+    "start": "2026-06-23T17:00:00Z",
+    "end": "2026-06-23T18:00:00Z",
+    "location": "Online Event",
+    "url": "https://luma.com/urn7y25u"
+  }
 }
