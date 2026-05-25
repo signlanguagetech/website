@@ -15,7 +15,7 @@ jobs:
   check-event:
     if: github.repository == 'signlanguagetech/website'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 2
     permissions:
       contents: write
     steps:
@@ -41,7 +41,8 @@ jobs:
             echo "No change, skip"
             exit 0
           fi
-          git -c user.name="github-actions[bot]" \
-              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-              commit -am "chore: update luma event cache [skip ci]"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/luma-event-cache.json
+          git commit -m "chore: update luma event cache"
           git push
