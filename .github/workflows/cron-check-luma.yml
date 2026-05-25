@@ -13,16 +13,21 @@ jobs:
     if: github.repository == 'signlanguagetech/website'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v6
         with:
-          bun-version: latest
+          version: latest
 
-      - run: bun install --frozen-lockfile
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
 
       - name: Check for new Luma event
-        run: bun scripts/checkLumaEvent.ts
+        run: pnpm exec tsx scripts/checkLumaEvent.ts
 
       - name: Commit cache if event changed
         run: |
