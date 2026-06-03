@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
@@ -19,7 +19,7 @@ export async function getStaticPath() {
 
 const glossaries = (await getCollection('glossary')).sort(sortDate);
 const glossary = first(glossaries);
-const { Content } = await glossary!.render();
+const { Content } = glossary ? await render(glossary) : { Content: null };
 ---
 
 <Layout title={subTitle} description={subDescription}>
@@ -27,10 +27,10 @@ const { Content } = await glossary!.render();
     glossaries={glossaries}
     link={glossary?.data.ytShortEmbeddedLink}
     currentGlossaryTitle={glossary?.data.title}
-    currentSlug={glossary?.slug}
+    currentSlug={glossary?.id}
   >
     <GlossaryContent>
-      <Content />
+      {Content && <Content />}
     </GlossaryContent>
   </GlossaryMain>
 </Layout>
