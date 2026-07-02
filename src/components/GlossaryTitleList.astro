@@ -35,10 +35,10 @@ const { glossaries, currentSlug, currentGlossaryTitle } = Astro.props;
           <li
             class:list={[
               'glossary-title',
-              { active: glossary.slug === currentSlug },
+              { active: glossary.id === currentSlug },
             ]}
           >
-            <a class='glossary-link' href={`/glossary/${glossary.slug}`}>
+            <a class='glossary-link' href={`/glossary/${glossary.id}`}>
               {glossary.data.title}
             </a>
           </li>

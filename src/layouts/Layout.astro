@@ -13,7 +13,10 @@ const { title, description } = Astro.props;
 ---
 
 <html lang='en'>
-  <BaseHead title={title} description={description} />
+  <head>
+    <BaseHead title={title} description={description} />
+    <slot name='head' />
+  </head>
   <body>
     <ConsentBanner />
     <Header />

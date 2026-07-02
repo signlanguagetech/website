@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry, render } from 'astro:content';
 
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import Layout from '../../layouts/Layout.astro';
@@ -15,14 +15,14 @@ const subDescription = `${SITE_DESCRIPTION} | glossary`;
 export async function getStaticPaths() {
   const glossaries = await getCollection('glossary');
   return glossaries.map((glossary) => ({
-    params: { slug: glossary.slug },
+    params: { slug: glossary.id },
     props: glossary,
   }));
 }
 
 const glossary = Astro.props;
 const glossaries = (await getCollection('glossary')).sort(sortDate);
-const { Content } = await glossary.render();
+const { Content } = await render(glossary);
 ---
 
 <Layout title={subTitle} description={subDescription}>
@@ -30,7 +30,7 @@ const { Content } = await glossary.render();
     glossaries={glossaries}
     link={glossary.data.ytShortEmbeddedLink}
     currentGlossaryTitle={glossary.data.title}
-    currentSlug={glossary?.slug}
+    currentSlug={glossary?.id}
   >
     <GlossaryContent>
       <Content />
