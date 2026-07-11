@@ -1,5 +1,11 @@
 {
-  "fingerprint": "no-event",
-  "updatedAt": "2026-06-29T13:12:58.187Z",
-  "event": null
+  "fingerprint": "Built By AI: \"Wow It Works!\" to \"Wow It Still Works\"|2026-07-23T17:00:00Z|2026-07-23T18:00:00Z",
+  "updatedAt": "2026-07-11T14:15:55.500Z",
+  "event": {
+    "title": "Built By AI: \"Wow It Works!\" to \"Wow It Still Works\"",
+    "start": "2026-07-23T17:00:00Z",
+    "end": "2026-07-23T18:00:00Z",
+    "location": "Online Event",
+    "url": "https://luma.com/10ewrrgy"
+  }
 }
