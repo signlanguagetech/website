@@ -1,5 +1,11 @@
 {
-  "fingerprint": "no-event",
-  "updatedAt": "2026-07-24T01:29:13.647Z",
-  "event": null
+  "fingerprint": "Build an Agent and Deploy to Gemini Enterprise|2026-08-25T16:00:00Z|2026-08-25T17:00:00Z",
+  "updatedAt": "2026-08-04T14:19:41.525Z",
+  "event": {
+    "title": "Build an Agent and Deploy to Gemini Enterprise",
+    "start": "2026-08-25T16:00:00Z",
+    "end": "2026-08-25T17:00:00Z",
+    "location": "Online Event",
+    "url": "https://luma.com/8k3trwqt"
+  }
 }
