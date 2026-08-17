@@ -1,0 +1,120 @@
+---
+interface PictureMarquee {
+  src: string;
+  alt: string;
+}
+
+const picturesMarquee: PictureMarquee[] = [
+  { src: 'conference.webp', alt: 'conference' },
+  { src: 'workshop.webp', alt: 'workshop' },
+  { src: 'slt-tech-talk.webp', alt: 'tech-talk' },
+  { src: 'coding.webp', alt: 'coding' },
+  { src: 'lighting-talk-effect.webp', alt: 'lighting-talk' },
+  { src: 'sign-course-asl.webp', alt: 'sign-course-asl' },
+];
+---
+
+<div class='pictures'>
+  <div class='pictures-track'>
+    {picturesMarquee.map((picture) => <img src={picture.src} alt={picture.alt} />)}
+  </div>
+  <div class='pictures-track pictures-track--second' aria-hidden='true'>
+    {picturesMarquee.map((picture) => <img src={picture.src} alt='' />)}
+  </div>
+</div>
+
+<style>
+  .pictures {
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+    --marquee-gap: 20px;
+  }
+
+  .pictures-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    gap: var(--marquee-gap);
+    width: max-content;
+    animation: pictures-marquee 30s linear infinite;
+  }
+
+  .pictures-track--second {
+    animation-name: pictures-marquee-second;
+  }
+
+  .pictures:hover .pictures-track {
+    animation-play-state: paused;
+  }
+
+  .pictures img {
+    display: block;
+    flex: 0 0 auto;
+    width: min(28vw, 360px);
+    height: 220px;
+    object-fit: cover;
+    border: 5px solid rgb(var(--black));
+    filter: grayscale(100%) brightness(130%);
+    transition: filter 0.35s ease;
+  }
+
+  .pictures img:hover {
+    filter: grayscale(0);
+  }
+
+  @keyframes pictures-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes pictures-marquee-second {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pictures-track {
+      animation: none;
+      position: static;
+      display: inline-flex;
+    }
+
+    .pictures {
+      display: flex;
+      gap: var(--marquee-gap);
+      overflow-x: auto;
+    }
+
+    .pictures-track--second {
+      display: none;
+    }
+  }
+
+  @media (min-width: 721px) {
+    .pictures {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .pictures {
+      height: 160px;
+    }
+
+    .pictures img {
+      width: 70vw;
+      height: 160px;
+    }
+  }
+</style>

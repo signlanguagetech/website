@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import SltStackImg from '../components/icons/SltStackImg.astro';
 import BookAppointmentButton from '../components/BookAppointmentButton.astro';
 import EventBanner from '../components/EventBanner.astro';
+import PictureMarquee from '../components/PictureMarquee.astro';
 import type { LumaEvent } from '../types/luma';
 import lumaCache from '../data/luma-event-cache.json';
 
@@ -34,7 +35,7 @@ const nextEvent = (lumaCache.event ?? null) as LumaEvent | null;
         lumaUrl={nextEvent.url}
       />
     )}
-    
+
     <section class='main-content__intro'>
       <div class='section-left'>
         <h1 class='title'>Empowering
@@ -52,14 +53,12 @@ const nextEvent = (lumaCache.event ?? null) as LumaEvent | null;
         <SltStackImg width='300px' />
       </div>
     </section>
+
     <section class='main-content__features'>
       <h1>Master coding with interactive tutorials, insightful interviews, and workshops delivered in International or American Sign Language</h1>
-      <div class='pictures'>
-        <img src='conference.webp' alt='conference'>
-        <img src='workshop.webp' alt='workshop'>
-        <img src='coding.webp' alt='coding'>
-      </div>
+      <PictureMarquee />
     </section>
+
     <section class='main-content__explore-more'>
       <a href='/blog'>
         <button class='primary-button'>Explore more</button>
@@ -68,23 +67,7 @@ const nextEvent = (lumaCache.event ?? null) as LumaEvent | null;
   </main>
 </Layout>
 
-
-
 <style>
-  .pictures {
-    display: flex;
-    height: 200px;
-    gap: 20px;
-  }
-
-  .pictures img {
-    border: 5px solid rgb(var(--black));
-    filter: grayscale(100%) brightness(130%);
-  }
-
-  .pictures img:hover {
-    filter: grayscale(0);
-  }
 
   section {
     margin-bottom: 120px;
@@ -94,9 +77,11 @@ const nextEvent = (lumaCache.event ?? null) as LumaEvent | null;
     width: unset;
     padding: 15px;
   }
+
   .primary-button {
     font-size: 1em;
   }
+
   .main-content__intro {
     display: flex;
     justify-content: space-between;
@@ -129,22 +114,19 @@ const nextEvent = (lumaCache.event ?? null) as LumaEvent | null;
   .sub-title {
     white-space: pre-line;
     font-size: 1em;
-    color: rgb(var(--gray))
+    color: rgb(var(--gray));
   }
 
-  @media  (max-width: 720px) {
+  @media (max-width: 720px) {
     .section-right {
       display: none;
     }
 
-    .pictures {
-      flex-direction: column;
-      height: unset;
-    }
   }
+
   @media (prefers-color-scheme: dark) {
     .sub-title {
-      color: rgb(var(--white), 0.5)
+      color: rgb(var(--white), 0.5);
     }
   }
 </style>
